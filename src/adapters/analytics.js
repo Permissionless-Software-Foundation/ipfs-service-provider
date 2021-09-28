@@ -14,10 +14,15 @@ const os = require('os-utils')
 const BCHJS = require('@psf/bch-js')
 const bchjs = new BCHJS()
 
+const { wlogger } = require('./wlogger')
+
 let _this
 
 class Analytics {
   constructor (localConfig = {}) {
+    // TODO: Create input validation to ensure an instance of ipfs library is passed.
+    this.ipfs = localConfig.ipfs
+
     // Persistant data.
     this.wtfState = {}
 
@@ -31,6 +36,9 @@ class Analytics {
 
   async reportAnalytics () {
     console.log('Reporting analytics.')
+
+    const ipfsCoordData = _this.getIpfsCoordData()
+    // console.log('ipfsCoordData: ', ipfsCoordData)
 
     const wtfnodeData = _this.getWtfNodeData()
 
@@ -49,11 +57,41 @@ class Analytics {
       uptime: {
         seconds: Math.floor(os.processUptime())
       },
-      wtfnode: wtfnodeData
+      wtfnode: wtfnodeData,
+      ipfsCoord: ipfsCoordData
     }
     console.log(`analyticsObj: ${JSON.stringify(analyticsObj, null, 2)}`)
 
+    // Save the analytics data to a log file.
+    wlogger.info('-analytics-', analyticsObj)
+
     return true
+  }
+
+  // Gathers data from the ipfs-coord library about current connections.
+  getIpfsCoordData () {
+    try {
+      // console.log(
+      //   '_this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode: ',
+      //   _this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
+      // )
+
+      const peers = _this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode.peerList
+      const relays = _this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode.relayData
+
+      // Filter out relays that are not connected. Only count relays that are connected.
+      const connectedRelays = relays.filter((x) => x.connected)
+
+      const outObj = {
+        peerCnt: peers.length,
+        relayCnt: connectedRelays.length
+      }
+
+      return outObj
+    } catch (err) {
+      // Exit quietly on error and return an empty object
+      return {}
+    }
   }
 
   // This is the top-level function for handling wtfnode analytics data.

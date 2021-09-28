@@ -31,7 +31,7 @@ class Adapters {
     this.jsonFiles = new JSONFiles()
     this.bchjs = new BCHJS()
     this.config = config
-    this.analytics = new Analytics()
+    this.analytics = new Analytics({ ipfs: this.ipfs })
 
     // Get a valid JWT API key and instance bch-js.
     this.fullStackJwt = new FullStackJWT(config)
