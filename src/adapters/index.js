@@ -51,7 +51,7 @@ class Adapters {
       await this.ipfs.start()
 
       // Periodically record analytics about this app.
-      setInterval(this.analytics.reportAnalytics, 10000)
+      setInterval(this.analytics.reportAnalytics, 60000 * 1)
     } catch (err) {
       console.error('Error in adapters/index.js/start()')
       throw err
