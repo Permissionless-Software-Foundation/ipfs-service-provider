@@ -16,6 +16,7 @@ const Nodemailer = require('./nodemailer')
 // const { wlogger } = require('./wlogger')
 const JSONFiles = require('./json-files')
 const FullStackJWT = require('./fullstack-jwt')
+const Analytics = require('./analytics')
 
 const config = require('../../config')
 
@@ -30,6 +31,7 @@ class Adapters {
     this.jsonFiles = new JSONFiles()
     this.bchjs = new BCHJS()
     this.config = config
+    this.analytics = new Analytics()
 
     // Get a valid JWT API key and instance bch-js.
     this.fullStackJwt = new FullStackJWT(config)
@@ -47,6 +49,9 @@ class Adapters {
 
       // Start the IPFS node.
       await this.ipfs.start()
+
+      // Periodically record analytics about this app.
+      setInterval(this.analytics.reportAnalytics, 10000)
     } catch (err) {
       console.error('Error in adapters/index.js/start()')
       throw err
