@@ -1,5 +1,6 @@
-import mongoose from 'mongoose'
-import config from '../../config/index.js'
+const mongoose = require('mongoose')
+
+const config = require('../../config')
 
 const EMAIL = 'test@test.com'
 const PASSWORD = 'pass'
@@ -33,6 +34,6 @@ async function addUser () {
 }
 addUser()
 
-export default {
+module.exports = {
   addUser
 }

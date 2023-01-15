@@ -3,19 +3,15 @@
 */
 
 // Public npm libraries
-import { assert } from 'chai'
-
-import sinon from 'sinon'
+const assert = require('chai').assert
+const sinon = require('sinon')
 
 // Local support libraries
-import adapters from '../../../mocks/adapters/index.js'
-
-import UseCasesMock from '../../../mocks/use-cases/index.js'
-
+const adapters = require('../../../mocks/adapters')
+const UseCasesMock = require('../../../mocks/use-cases')
 // const app = require('../../../mocks/app-mock')
 
-import ContactRouter from '../../../../../src/controllers/rest-api/contact/index.js'
-
+const ContactRouter = require('../../../../../src/controllers/rest-api/contact')
 let uut
 let sandbox
 // let ctx

@@ -3,14 +3,13 @@
 */
 
 // Public npm libraries
-import jsonrpc from 'jsonrpc-lite'
+const jsonrpc = require('jsonrpc-lite')
 
 // Local support libraries
-import wlogger from '../../adapters/wlogger.js'
-
-import UserController from './users/index.js'
-import AuthController from './auth/index.js'
-import AboutController from './about/index.js'
+const { wlogger } = require('../../adapters/wlogger')
+const UserController = require('./users')
+const AuthController = require('./auth')
+const AboutController = require('./about')
 
 let _this
 
@@ -191,4 +190,4 @@ class JSONRPC {
   }
 }
 
-export default JSONRPC
+module.exports = JSONRPC

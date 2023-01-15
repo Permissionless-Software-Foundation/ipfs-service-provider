@@ -1,4 +1,4 @@
-export default function errorMiddleware () {
+module.exports = function errorMiddleware () {
   return async (ctx, next) => {
     try {
       await next()
@@ -8,4 +8,4 @@ export default function errorMiddleware () {
       ctx.app.emit('error', err, ctx)
     }
   }
-};
+}

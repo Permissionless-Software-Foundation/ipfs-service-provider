@@ -4,11 +4,10 @@
 /* eslint no-useless-catch: 0 */
 
 // Public npm libraries
-import jwt from 'jsonwebtoken'
+const jwt = require('jsonwebtoken')
 
 // Local libraries
-import config from '../../../config/index.js'
-
+const config = require('../../../config')
 // const UserModel = require('../../adapters/localdb/models/users')
 
 class Validators {
@@ -94,4 +93,4 @@ class Validators {
   }
 }
 
-export default Validators
+module.exports = Validators

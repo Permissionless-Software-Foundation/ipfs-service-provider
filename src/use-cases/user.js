@@ -3,9 +3,8 @@
   functions are called by the /user REST API endpoints.
 */
 
-import UserEntity from '../entities/user.js'
-
-import wlogger from '../adapters/wlogger.js'
+const UserEntity = require('../entities/user')
+const { wlogger } = require('../adapters/wlogger')
 
 class UserLib {
   constructor (localConfig = {}) {
@@ -182,4 +181,4 @@ class UserLib {
   }
 }
 
-export default UserLib
+module.exports = UserLib

@@ -5,16 +5,15 @@
 */
 
 // Public npm libraries
-import { assert } from 'chai'
-import sinon from 'sinon'
+const assert = require('chai').assert
+const sinon = require('sinon')
 
 // Local support libraries
 // const testUtils = require('../../utils/test-utils')
 
 // Unit under test (uut)
-import UserLib from '../../../src/use-cases/user.js'
-
-import adapters from '../mocks/adapters/index.js'
+const UserLib = require('../../../src/use-cases/user')
+const adapters = require('../mocks/adapters')
 
 describe('#users-use-case', () => {
   let uut

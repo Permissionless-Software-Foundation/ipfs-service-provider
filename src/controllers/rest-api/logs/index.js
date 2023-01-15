@@ -3,10 +3,10 @@
 */
 
 // Public npm libraries.
-import Router from 'koa-router'
+const Router = require('koa-router')
 
 // Local libraries.
-import LogsRESTControllerLib from './controller.js'
+const LogsRESTControllerLib = require('./controller')
 
 class LogsRouter {
   constructor (localConfig = {}) {
@@ -52,4 +52,4 @@ class LogsRouter {
   }
 }
 
-export default LogsRouter
+module.exports = LogsRouter

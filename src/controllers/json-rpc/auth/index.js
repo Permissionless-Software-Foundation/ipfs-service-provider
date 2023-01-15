@@ -3,14 +3,13 @@
 */
 
 // Public npm libraries
-import jsonrpc from 'jsonrpc-lite'
+const jsonrpc = require('jsonrpc-lite')
 
 // Local libraries
 // const AuthLib = require('../../lib/auth')
 // const UserLib = require('../../../use-cases/user')
-import wlogger from '../../../adapters/wlogger.js'
-
-import RateLimit from '../rate-limit.js'
+const { wlogger } = require('../../../adapters/wlogger')
+const RateLimit = require('../rate-limit')
 
 class AuthRPC {
   constructor (localConfig = {}) {
@@ -174,4 +173,4 @@ class AuthRPC {
   }
 }
 
-export default AuthRPC
+module.exports = AuthRPC

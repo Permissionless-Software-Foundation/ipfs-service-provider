@@ -3,9 +3,9 @@
 */
 
 /* eslint-disable no-useless-escape */
-import ContactLib from '../../../adapters/contact.js'
-
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+
+const ContactLib = require('../../../adapters/contact')
 const contactLib = new ContactLib()
 
 let _this
@@ -74,4 +74,4 @@ class ContactController {
     }
   }
 }
-export default ContactController
+module.exports = ContactController

@@ -1,8 +1,8 @@
 /*
   A utility file for reading and writing JSON files.
 */
-
-import fs from 'fs'
+'use strict'
+const fs = require('fs')
 
 let _this
 
@@ -72,4 +72,4 @@ class JsonFiles {
   }
 }
 
-export default JsonFiles
+module.exports = JsonFiles

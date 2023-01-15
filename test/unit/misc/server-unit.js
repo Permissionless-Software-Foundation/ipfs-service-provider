@@ -3,11 +3,11 @@
 */
 
 // Public npm libraries
-import { assert } from 'chai'
-import sinon from 'sinon'
+const assert = require('chai').assert
+const sinon = require('sinon')
 
 // Local libraries
-import Server from '../../../bin/server.js'
+const Server = require('../../../bin/server')
 
 describe('#server', () => {
   let uut, sandbox

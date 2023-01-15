@@ -1,14 +1,9 @@
-import lineReader from 'line-reader'
-import fs from 'fs'
+const lineReader = require('line-reader')
+const fs = require('fs')
 
-import config from '../../config/index.js'
-
-// Hack to get __dirname back.
-// https://blog.logrocket.com/alternatives-dirname-node-js-es-modules/
-import * as url from 'url'
+const config = require('../../config')
 
 let _this
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 class LogsApi {
   constructor () {
@@ -174,4 +169,4 @@ class LogsApi {
   }
 }
 
-export default LogsApi
+module.exports = LogsApi

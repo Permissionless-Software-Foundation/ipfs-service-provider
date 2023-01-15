@@ -3,10 +3,11 @@
 */
 
 'use strict'
-import nodemailer from 'nodemailer'
+const nodemailer = require('nodemailer')
 
-import config from '../../config/index.js'
-import wlogger from './wlogger.js'
+const config = require('../../config')
+
+const { wlogger } = require('./wlogger')
 
 let _this
 
@@ -149,4 +150,4 @@ class NodeMailer {
   }
 }
 
-export default NodeMailer
+module.exports = NodeMailer

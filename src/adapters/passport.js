@@ -2,7 +2,7 @@
   koa-passport is an authorization library used for different authentication schemes.
 */
 
-import passport from 'koa-passport'
+const passport = require('koa-passport')
 
 let _this
 class Passport {
@@ -32,4 +32,4 @@ class Passport {
   }
 }
 
-export default Passport
+module.exports = Passport

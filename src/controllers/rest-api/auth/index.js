@@ -3,10 +3,10 @@
 */
 
 // Public npm libraries.
-import Router from 'koa-router'
+const Router = require('koa-router')
 
 // Local libraries.
-import AuthRESTController from './controller.js'
+const AuthRESTController = require('./controller')
 
 class AuthRouter {
   constructor (localConfig = {}) {
@@ -48,4 +48,4 @@ class AuthRouter {
   }
 }
 
-export default AuthRouter
+module.exports = AuthRouter

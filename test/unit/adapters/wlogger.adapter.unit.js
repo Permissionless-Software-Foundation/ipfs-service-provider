@@ -1,6 +1,7 @@
-import { assert } from 'chai'
-import { Wlogger } from '../../../src/adapters/wlogger.js'
-import sinon from 'sinon'
+const assert = require('chai').assert
+const { Wlogger } = require('../../../src/adapters/wlogger')
+
+const sinon = require('sinon')
 
 let uut
 let sandbox

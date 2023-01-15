@@ -1,6 +1,8 @@
-import mongoose from 'mongoose'
-import config from '../../config/index.js'
-import User from '../../src/models/users.js'
+const mongoose = require('mongoose')
+
+const config = require('../../config')
+
+const User = require('../../src/models/users')
 
 async function getUsers () {
   // Connect to the Mongo Database.

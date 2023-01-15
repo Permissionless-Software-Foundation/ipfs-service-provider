@@ -3,7 +3,7 @@
 */
 
 // Load Mongoose models.
-import Users from './models/users.js'
+const Users = require('./models/users')
 
 class LocalDB {
   constructor () {
@@ -12,4 +12,4 @@ class LocalDB {
   }
 }
 
-export default LocalDB
+module.exports = LocalDB

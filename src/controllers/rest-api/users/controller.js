@@ -2,7 +2,7 @@
   REST API Controller library for the /user route
 */
 
-import wlogger from '../../../adapters/wlogger.js'
+const { wlogger } = require('../../../adapters/wlogger')
 
 let _this
 
@@ -281,4 +281,4 @@ class UserRESTControllerLib {
   }
 }
 
-export default UserRESTControllerLib
+module.exports = UserRESTControllerLib

@@ -7,18 +7,17 @@
 // Public npm libraries.
 
 // Load the Clean Architecture Adapters library
-import Adapters from '../adapters/index.js'
+const Adapters = require('../adapters')
 
 // Load the JSON RPC Controller.
-import JSONRPC from './json-rpc/index.js'
+const JSONRPC = require('./json-rpc')
 
 // Load the Clean Architecture Use Case libraries.
-import UseCases from '../use-cases/index.js'
-
+const UseCases = require('../use-cases')
 // const useCases = new UseCases({ adapters })
 
 // Load the REST API Controllers.
-import RESTControllers from './rest-api/index.js'
+const RESTControllers = require('./rest-api')
 
 class Controllers {
   constructor (localConfig = {}) {
@@ -73,4 +72,4 @@ class Controllers {
   }
 }
 
-export default Controllers
+module.exports = Controllers

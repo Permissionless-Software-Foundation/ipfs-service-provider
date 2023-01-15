@@ -13,19 +13,13 @@
   in the Adapter directory.
 */
 
-// Global npm libraries
-import axios from 'axios'
-import mongoose from 'mongoose'
-
-// Local libraries
-import User from '../adapters/localdb/models/users.js'
-import config from '../../config/index.js'
-import JsonFiles from '../adapters/json-files.js'
-
-// Hack to get __dirname back.
-// https://blog.logrocket.com/alternatives-dirname-node-js-es-modules/
-import * as url from 'url'
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
+'use strict'
+const axios = require('axios').default
+const mongoose = require('mongoose')
+const User = require('../adapters/localdb/models/users')
+const config = require('../../config')
+const JsonFiles = require('../adapters/json-files')
+const jsonFiles = new JsonFiles()
 
 const jsonFiles = new JsonFiles()
 
@@ -179,4 +173,4 @@ class Admin {
   }
 }
 
-export default Admin
+module.exports = Admin

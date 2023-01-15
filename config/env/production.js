@@ -7,7 +7,7 @@
   so as not to conflict with the default host port of 27017 for MongoDB.
 */
 
-export default {
+module.exports = {
   session: 'secret-boilerplate-token',
   token: 'secret-jwt-token',
   // database: 'mongodb://172.17.0.1:5555/ipfs-service-prod',

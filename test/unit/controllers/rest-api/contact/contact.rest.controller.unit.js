@@ -3,15 +3,15 @@
 */
 
 // Public npm libraries
-import { assert } from 'chai'
+const assert = require('chai').assert
+const sinon = require('sinon')
 
-import sinon from 'sinon'
-import ContactController from '../../../../../src/controllers/rest-api/contact/controller.js'
-
-import { context as mockContext } from '../../../../unit/mocks/ctx-mock.js'
+const ContactController = require('../../../../../src/controllers/rest-api/contact/controller')
 let uut
 let sandbox
 let ctx
+
+const mockContext = require('../../../../unit/mocks/ctx-mock').context
 
 describe('Contact', () => {
   before(async () => {

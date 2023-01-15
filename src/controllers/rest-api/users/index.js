@@ -3,12 +3,11 @@
 */
 
 // Public npm libraries.
-import Router from 'koa-router'
+const Router = require('koa-router')
 
 // Local libraries.
-import UserRESTControllerLib from './controller.js'
-
-import Validators from '../middleware/validators.js'
+const UserRESTControllerLib = require('./controller')
+const Validators = require('../middleware/validators')
 
 let _this
 
@@ -86,4 +85,4 @@ class UserRouter {
   }
 }
 
-export default UserRouter
+module.exports = UserRouter

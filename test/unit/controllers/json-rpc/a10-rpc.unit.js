@@ -3,20 +3,18 @@
 */
 
 // Public npm libraries
-import { assert } from 'chai'
-
-import jsonrpc from 'jsonrpc-lite'
-import sinon from 'sinon'
-import { v4 as uid } from 'uuid'
-
-// Local libraries.
-import JSONRPC from '../../../../src/controllers/json-rpc/index.js'
-
-import adapters from '../../mocks/adapters/index.js'
-import UseCasesMock from '../../mocks/use-cases/index.js'
+const assert = require('chai').assert
+const jsonrpc = require('jsonrpc-lite')
+const sinon = require('sinon')
+const { v4: uid } = require('uuid')
 
 // Set the environment variable to signal this is a test.
 process.env.SVC_ENV = 'test'
+
+// Local libraries.
+const JSONRPC = require('../../../../src/controllers/json-rpc')
+const adapters = require('../../mocks/adapters')
+const UseCasesMock = require('../../mocks/use-cases')
 
 describe('#JSON RPC', () => {
   let uut

@@ -1,7 +1,10 @@
-import { assert } from 'chai'
-import Admin from '../../../src/adapters/admin.js'
-import sinon from 'sinon'
-import util from 'util'
+const assert = require('chai').assert
+
+const Admin = require('../../../src/adapters/admin')
+
+const sinon = require('sinon')
+
+const util = require('util')
 util.inspect.defaultOptions = { depth: 1 }
 
 let sandbox

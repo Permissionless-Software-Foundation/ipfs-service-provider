@@ -3,17 +3,14 @@
 */
 
 // Public npm libraries
-import { assert } from 'chai'
-
-import sinon from 'sinon'
+const assert = require('chai').assert
+const sinon = require('sinon')
 
 // Local libraries
-import RESTControllers from '../../../../src/controllers/rest-api/index.js'
-
+const RESTControllers = require('../../../../src/controllers/rest-api/')
 // const mockContext = require('../../../unit/mocks/ctx-mock').context
-import adapters from '../../mocks/adapters/index.js'
-
-import UseCasesMock from '../../mocks/use-cases/index.js'
+const adapters = require('../../mocks/adapters')
+const UseCasesMock = require('../../mocks/use-cases')
 
 describe('#RESTControllers', () => {
   let uut

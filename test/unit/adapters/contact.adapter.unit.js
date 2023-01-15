@@ -1,6 +1,7 @@
-import { assert } from 'chai'
-import sinon from 'sinon'
-import ContactLib from '../../../src/adapters/contact.js'
+const assert = require('chai').assert
+const sinon = require('sinon')
+
+const ContactLib = require('../../../src/adapters/contact')
 let uut
 let sandbox
 

@@ -1,10 +1,7 @@
-// Global npm libraries
-import mongoose from 'mongoose'
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-
-// Local libraries
-import config from '../../../../config/index.js'
+const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const config = require('../../../../config')
+const jwt = require('jsonwebtoken')
 
 const User = new mongoose.Schema({
   type: { type: String, default: 'user' },
@@ -54,4 +51,4 @@ User.methods.generateToken = function generateToken () {
 }
 
 // export default mongoose.model('user', User)
-export default mongoose.model('user', User)
+module.exports = mongoose.model('user', User)

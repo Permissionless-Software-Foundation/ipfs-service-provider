@@ -10,17 +10,14 @@
 import * as url from 'url'
 
 // Get the version from the package.json file.
-import { readFileSync } from 'fs'
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
-const pkgInfo = JSON.parse(readFileSync(`${__dirname.toString()}/../../package.json`))
-
+const pkgInfo = require('../../package.json')
 const version = pkgInfo.version
 
 const ipfsCoordName = process.env.COORD_NAME
   ? process.env.COORD_NAME
   : 'ipfs-bch-wallet-service'
 
-export default {
+module.exports = {
   // Configure TCP port.
   port: process.env.PORT || 5020,
 

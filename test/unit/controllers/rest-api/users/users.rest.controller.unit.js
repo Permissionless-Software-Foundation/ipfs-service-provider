@@ -3,18 +3,19 @@
 */
 
 // Public npm libraries
-import { assert } from 'chai'
-import sinon from 'sinon'
+const assert = require('chai').assert
+const sinon = require('sinon')
 
 // Local support libraries
-import adapters from '../../../mocks/adapters/index.js'
-import UseCasesMock from '../../../mocks/use-cases/index.js'
-import UserController from '../../../../../src/controllers/rest-api/users/controller.js'
+const adapters = require('../../../mocks/adapters')
+const UseCasesMock = require('../../../mocks/use-cases')
 
-import { context as mockContext } from '../../../../unit/mocks/ctx-mock.js'
+const UserController = require('../../../../../src/controllers/rest-api/users/controller')
 let uut
 let sandbox
 let ctx
+
+const mockContext = require('../../../../unit/mocks/ctx-mock').context
 
 describe('#Users-REST-Controller', () => {
   // const testUser = {}

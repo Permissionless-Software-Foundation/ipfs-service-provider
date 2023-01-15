@@ -3,19 +3,12 @@
 */
 
 // Public NPM libraries
-import mongoose from 'mongoose'
-import axios from 'axios'
+const mongoose = require('mongoose')
+const axios = require('axios').default
 
 // Local libraries
-import config from '../../config/index.js'
-import User from '../../src/adapters/localdb/models/users.js'
-import JsonFiles from '../../src/adapters/json-files.js'
-
-// Hack to get __dirname back.
-// https://blog.logrocket.com/alternatives-dirname-node-js-es-modules/
-import * as url from 'url'
-
-const jsonFiles = new JsonFiles()
+const config = require('../../config')
+const User = require('../../src/adapters/localdb/models/users')
 
 const LOCALHOST = `http://localhost:${config.port}`
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
@@ -171,7 +164,7 @@ async function getAdminJWT () {
   }
 }
 
-export default {
+module.exports = {
   cleanDb,
   createUser,
   loginTestUser,

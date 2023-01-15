@@ -3,12 +3,11 @@
 */
 
 // Global npm libraries
-import { assert } from 'chai'
-
-import sinon from 'sinon'
+const assert = require('chai').assert
+const sinon = require('sinon')
 
 // Local libraries
-import Adapters from '../../../src/adapters/index.js'
+const Adapters = require('../../../src/adapters')
 
 describe('#adapters', () => {
   let uut, sandbox

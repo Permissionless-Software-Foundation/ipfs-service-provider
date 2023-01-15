@@ -14,11 +14,10 @@
   this refactor did not result in any breaking changes.
 */
 
-import User from '../../../adapters/localdb/models/users.js'
-
-import config from '../../../../config/index.js'
-import jwt from 'jsonwebtoken'
-import wlogger from '../../../adapters/wlogger.js'
+const User = require('../../../adapters/localdb/models/users')
+const config = require('../../../../config')
+const jwt = require('jsonwebtoken')
+const { wlogger } = require('../../../adapters/wlogger')
 
 let _this
 
@@ -191,4 +190,4 @@ class Validators {
   }
 }
 
-export default Validators
+module.exports = Validators

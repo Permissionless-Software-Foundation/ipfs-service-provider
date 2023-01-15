@@ -6,17 +6,10 @@
 
 'use strict'
 
-// Global npm libraries
-import winston from 'winston'
-import 'winston-daily-rotate-file'
+const winston = require('winston')
+require('winston-daily-rotate-file')
 
-// Local libraries
-import config from '../../config/index.js'
-
-// Hack to get __dirname back.
-// https://blog.logrocket.com/alternatives-dirname-node-js-es-modules/
-import * as url from 'url'
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
+const config = require('../../config')
 
 class Wlogger {
   constructor (localConfig = {}) {
@@ -76,5 +69,4 @@ logger.outputToConsole()
 
 const wlogger = logger.wlogger
 
-export { wlogger as default, Wlogger }
-// export default wlogger
+module.exports = { wlogger, Wlogger }

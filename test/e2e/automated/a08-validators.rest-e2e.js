@@ -1,10 +1,12 @@
-/*
-import { assert } from 'chai';
-import testUtils from '../../utils/test-utils.js';
-import Validators from '../../../src/controllers/rest-api/middleware/validators.js';
-import sinon from 'sinon';
-import { context as mockContext } from '../../unit/mocks/ctx-mock.js';
-import util from 'util';
+const assert = require('chai').assert
+const testUtils = require('../../utils/test-utils')
+
+const Validators = require('../../../src/controllers/rest-api/middleware/validators')
+
+const sinon = require('sinon')
+const mockContext = require('../../unit/mocks/ctx-mock').context
+
+const util = require('util')
 util.inspect.defaultOptions = { depth: 1 }
 
 const context = {}
@@ -301,4 +303,3 @@ describe('Validators', () => {
     })
   })
 })
-*/
