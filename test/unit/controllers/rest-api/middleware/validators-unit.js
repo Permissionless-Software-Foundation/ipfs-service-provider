@@ -3,12 +3,12 @@
 */
 
 // Public npm libraries
-import { assert } from 'chai'
-import sinon from 'sinon'
+const { assert } = require('chai')
+const sinon = require('sinon')
 
 // Local libraries
-import Validators from '../../../../../src/controllers/rest-api/middleware/validators.js'
-import { context as mockContext } from '../../../../unit/mocks/ctx-mock.js'
+const Validators = require('../../../../../src/controllers/rest-api/middleware/validators.js')
+const mockContext = require('../../../../unit/mocks/ctx-mock.js').context
 
 describe('#Validators', () => {
   let uut

@@ -2,7 +2,7 @@
   Unit tests for the config directory
 */
 
-import { assert } from 'chai'
+const { assert } =require('chai')
 
 let currentEnv
 

@@ -3,7 +3,7 @@
 */
 
 // Public NPM libraries
-import JsonFiles from '../../src/adapters/json-files.js'
+const JsonFiles = require('../../src/adapters/json-files.js')
 const mongoose = require('mongoose')
 const axios = require('axios').default
 
