@@ -7,7 +7,7 @@
 
 // Hack to get __dirname back.
 // https://blog.logrocket.com/alternatives-dirname-node-js-es-modules/
-import * as url from 'url'
+// import * as url from 'url'
 
 // Get the version from the package.json file.
 const pkgInfo = require('../../package.json')

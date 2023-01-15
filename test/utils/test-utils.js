@@ -3,15 +3,17 @@
 */
 
 // Public NPM libraries
+import JsonFiles from '../../src/adapters/json-files.js'
 const mongoose = require('mongoose')
 const axios = require('axios').default
 
 // Local libraries
 const config = require('../../config')
 const User = require('../../src/adapters/localdb/models/users')
+const jsonFiles = new JsonFiles()
 
 const LOCALHOST = `http://localhost:${config.port}`
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
+// const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 // Remove all collections from the DB.
 async function cleanDb () {
