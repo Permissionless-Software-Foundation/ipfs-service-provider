@@ -2,6 +2,11 @@
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
+## CJS Branch
+This `cjs` branch is not intended to be merged with the `master` branch. This `cjs` branch contains a CommonJS version of the code, so that this boilerplate can be used in projects that can not take advantage of the ESM version of the code base.
+
+As improvements and changes are made to the `master` branch, it is expected that those changes will be merged into this `cjs` branch.
+
 ## Overview
 
 This is a 'boilerplate' repository. It's intended to be forked to start new projects. However, it can also be run as a stand-alone Circuit Relay, for supporting the PSF network.
