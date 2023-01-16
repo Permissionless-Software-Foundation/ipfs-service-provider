@@ -22,7 +22,7 @@ const JsonFiles = require('../adapters/json-files')
 const jsonFiles = new JsonFiles()
 
 const JSON_FILE = `system-user-${config.env}.json`
-const JSON_PATH = `${__dirname.toString()}../../config/${JSON_FILE}`
+const JSON_PATH = `${__dirname.toString()}/../../config/${JSON_FILE}`
 
 const LOCALHOST = `http://localhost:${config.port}`
 const context = {}

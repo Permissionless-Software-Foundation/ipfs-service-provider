@@ -35,7 +35,8 @@ class Validators {
       const token = _this.getToken(ctx)
 
       if (!token) {
-        throw new Error('Token could not be retrieved from header')
+        // throw new Error('Token could not be retrieved from header')
+        ctx.throw(401)
       }
 
       let decoded = null
@@ -44,14 +45,16 @@ class Validators {
         // console.log(`config: ${JSON.stringify(config, null, 2)}`)
         decoded = _this.jwt.verify(token, config.token)
       } catch (err) {
-        throw new Error('Could not verify JWT')
+        // throw new Error('Could not verify JWT')
+        ctx.throw(401)
       }
 
       ctx.state.user = await _this.User.findById(decoded.id, '-password')
 
       if (!ctx.state.user) {
         // console.log('Err: Could not find user.')
-        throw new Error('Could not find user')
+        // throw new Error('Could not find user')
+        ctx.throw(401)
       }
 
       // return next()
@@ -73,8 +76,8 @@ class Validators {
 
       if (!token) {
         // console.log(`Err: Token not provided.`)
-        // ctx.throw(401)
-        throw new Error('Token could not be retrieved from header')
+        ctx.throw(401)
+        // throw new Error('Token could not be retrieved from header')
       }
 
       let decoded = null
@@ -84,20 +87,20 @@ class Validators {
         decoded = _this.jwt.verify(token, config.token)
       } catch (err) {
         // console.log(`Err: Token could not be decoded: ${err}`)
-        // ctx.throw(401)
-        throw new Error('Could not verify JWT')
+        ctx.throw(401)
+        // throw new Error('Could not verify JWT')
       }
 
       ctx.state.user = await _this.User.findById(decoded.id, '-password')
       if (!ctx.state.user) {
         // console.log(`Err: Could not find user.`)
-        // ctx.throw(401)
-        throw new Error('Could not find user')
+        ctx.throw(401)
+        // throw new Error('Could not find user')
       }
 
       if (ctx.state.user.type !== 'admin') {
-        // ctx.throw(401, 'not admin')
-        throw new Error('User is not an admin')
+        ctx.throw(401, 'not admin')
+        // throw new Error('User is not an admin')
       }
 
       // return next()
@@ -119,8 +122,8 @@ class Validators {
 
       if (!token) {
         // console.log(`Err: Token not provided.`)
-        // ctx.throw(401)
-        throw new Error('Token could not be retrieved from header')
+        ctx.throw(401)
+        // throw new Error('Token could not be retrieved from header')
       }
 
       // The user ID targeted in this API call.
@@ -134,15 +137,15 @@ class Validators {
         decoded = _this.jwt.verify(token, config.token)
       } catch (err) {
         console.log(`Err: Token could not be decoded: ${err}`)
-        // ctx.throw(401)
-        throw new Error('Could not verify JWT')
+        ctx.throw(401)
+        // throw new Error('Could not verify JWT')
       }
 
       ctx.state.user = await _this.User.findById(decoded.id, '-password')
       if (!ctx.state.user) {
         // console.log(`Err: Could not find user.`)
-        // ctx.throw(401)
-        throw new Error('Could not find user')
+        ctx.throw(401)
+        // throw new Error('Could not find user')
       }
       // console.log('ctx.state.user: ', ctx.state.user)
 
@@ -156,8 +159,8 @@ class Validators {
 
         // If they don't match, then the calling user better be an admin.
         if (ctx.state.user.type !== 'admin') {
-          // ctx.throw(401, 'not admin')
-          throw new Error('User is not an admin')
+          ctx.throw(401, 'not admin')
+          // throw new Error('User is not an admin')
         } else {
           wlogger.verbose("It's ok. The user is an admin.")
         }

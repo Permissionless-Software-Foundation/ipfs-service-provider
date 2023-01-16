@@ -113,7 +113,7 @@ async function loginTestUser () {
 
 async function loginAdminUser () {
   try {
-    const FILENAME = `${__dirname.toString()}../../config/system-user-${config.env}.json`
+    const FILENAME = `${__dirname.toString()}/../../config/system-user-${config.env}.json`
     // console.log('FILENAME: ', FILENAME)
 
     const adminUserData = await jsonFiles.readJSON(FILENAME)
@@ -154,7 +154,7 @@ async function getAdminJWT () {
     // process.env.KOA_ENV = process.env.KOA_ENV || 'dev'
     // console.log(`env: ${process.env.KOA_ENV}`)
 
-    const FILENAME = `${__dirname.toString()}../../config/system-user-${config.env}.json`
+    const FILENAME = `${__dirname.toString()}/../../config/system-user-${config.env}.json`
     // console.log('FILENAME: ', FILENAME)
     const adminUserData = await jsonFiles.readJSON(FILENAME)
     // console.log(`adminUserData: ${JSON.stringify(adminUserData, null, 2)}`)
