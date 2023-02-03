@@ -39,7 +39,8 @@ export default {
     : 'emailpassword',
 
   // FullStack.cash account information, used for automatic JWT handling.
-  getJwtAtStartup: process.env.GET_JWT_AT_STARTUP ? true : false,
+  // getJwtAtStartup: process.env.GET_JWT_AT_STARTUP ? true : false,
+  getJwtAtStartup: false,
   authServer: process.env.AUTHSERVER
     ? process.env.AUTHSERVER
     : 'https://auth.fullstack.cash',

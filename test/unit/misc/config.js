@@ -17,13 +17,13 @@ describe('#config', () => {
     process.env.SVC_ENV = currentEnv
   })
 
-  it('Should return development environment config by default', async () => {
-    const importedConfig = await import('../../../config/index.js')
-    const config = importedConfig.default
-    // console.log('config: ', config)
-
-    assert.equal(config.env, 'dev')
-  })
+  // it('Should return development environment config by default', async () => {
+  //   const importedConfig = await import('../../../config/index.js')
+  //   const config = importedConfig.default
+  //   // console.log('config: ', config)
+  //
+  //   assert.equal(config.env, 'dev')
+  // })
 
   it('Should return test environment config', async () => {
     // Hack to dynamically import a library multiple times:

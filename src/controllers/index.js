@@ -56,7 +56,7 @@ class Controllers {
     // Attach the REST controllers to the Koa app.
     // this.attachRESTControllers(app)
 
-    this.attachRPCControllers()
+    // this.attachRPCControllers()
   }
 
   // Add the JSON RPC router to the ipfs-coord adapter.
