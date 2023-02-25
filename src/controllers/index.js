@@ -19,10 +19,14 @@ const UseCases = require('../use-cases')
 // Load the REST API Controllers.
 const RESTControllers = require('./rest-api')
 
+// Load the time controller library
+const TimerControllers = require('./timer-controllers.js')
+
 class Controllers {
   constructor (localConfig = {}) {
     this.adapters = new Adapters()
     this.useCases = new UseCases({ adapters: this.adapters })
+    this.timerControllers = new TimerControllers({ adapters: this.adapters, useCases: this.useCases })
   }
 
   // Spin up any adapter libraries that have async startup needs.
@@ -52,10 +56,11 @@ class Controllers {
     // Wait for any startup processes to complete for the Adapters libraries.
     // await this.adapters.start()
 
-    // Attach the REST controllers to the Koa app.
-    // this.attachRESTControllers(app)
-
+    // Attach JSON RPC controllers
     this.attachRPCControllers()
+
+    // Attach and start the timer controllers
+    this.timerControllers.startTimers()
   }
 
   // Add the JSON RPC router to the ipfs-coord adapter.
