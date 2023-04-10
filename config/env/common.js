@@ -51,6 +51,7 @@ module.exports = {
     : 'demo',
 
   // IPFS settings.
+  useIpfs: process.env.DISABLE_IPFS ? false : true, // Disable IPFS flag
   isCircuitRelay: process.env.ENABLE_CIRCUIT_RELAY ? true : false,
   // SSL domain used for websocket connection via browsers.
   crDomain: process.env.CR_DOMAIN ? process.env.CR_DOMAIN : '',
