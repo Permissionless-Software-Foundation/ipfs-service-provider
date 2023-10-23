@@ -4,7 +4,13 @@
 
 ## Overview
 
-This is a 'boilerplate' repository. It's intended to be forked to start new projects. However, it can also be run as a stand-alone Circuit Relay, for supporting the PSF network.
+This is a 'boilerplate' repository. It's intended to be forked to start new projects. Some code projects that are forks of this repository and regularly pull in changes:
+- [pay-to-write database (P2WDB)](https://p2wdb.com/)
+- [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer)
+- [ipfs-bch-wallet-service](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service)
+
+
+In addition to being forked as a boilerpalte, it can also be run as a stand-alone application to create a [Circuit Relay](https://cashstack.info/docs/local-back-end/circuit-relay), which can support the [PSF](https://psfoundation.info) IPFS network. It can also be used for experimenting with [helia-coord](https://github.com/Permissionless-Software-Foundation/helia-coord) and the [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) command-line wallet.
 
 ## Boilerplate
 
@@ -12,11 +18,11 @@ This repository has been forked from the [koa-api-boilerplate](https://github.co
 
 - [Koa](https://koajs.com/) framework for REST APIs
 - User management
-- Access and rate-limit control using [JWT tokens](https://jwt.io/).
+- Access and rate-limit control using [JWT tokens](https://jwt.io/)
 
 This boilerplate extends that code to provide the basic features required to be a 'service provider' on the [IPFS](https://ipfs.io) network. This is a core concept in the [web3 Cash Stack](https://cashstack.info). These basic features include:
 
-- [ipfs-coord](https://www.npmjs.com/package/ipfs-coord) for coordinating service providers and consumers across the IPFS network.
+- [helia-coord](https://github.com/Permissionless-Software-Foundation/helia-coord) for coordinating service providers and consumers across the IPFS network.
 - JSON RPC for creating an API between providers and consumers.
 
 If you are interested in creating your own service provider on the IPFS network, fork this repository and start building.
