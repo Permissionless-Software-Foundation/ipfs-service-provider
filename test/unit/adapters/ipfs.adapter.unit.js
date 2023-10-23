@@ -2,20 +2,27 @@
   Unit tests for the IPFS Adapter.
 */
 
+// Global npm libraries
 import { assert } from 'chai'
-
 import sinon from 'sinon'
+import cloneDeep from 'lodash.clonedeep'
+
+// Local libraries
 import IPFSLib from '../../../src/adapters/ipfs/ipfs.js'
-import create from '../mocks/ipfs-mock.js'
+// import create from '../mocks/ipfs-mock.js'
 import config from '../../../config/index.js'
+import createHeliaLib from '../mocks/helia-mock.js'
 
 // config.isProduction =  true;
 describe('#IPFS-adapter', () => {
   let uut
   let sandbox
+  let ipfs
 
   beforeEach(() => {
     uut = new IPFSLib()
+
+    ipfs = cloneDeep(createHeliaLib)
 
     sandbox = sinon.createSandbox()
   })
@@ -45,35 +52,26 @@ describe('#IPFS-adapter', () => {
   describe('#start', () => {
     it('should return a promise that resolves into an instance of IPFS.', async () => {
       // Mock dependencies.
-      uut.create = create
+      sandbox.stub(uut, 'createNode').resolves(ipfs)
 
       const result = await uut.start()
       // console.log('result: ', result)
 
+      // Assert properties of the instance are set.
       assert.equal(uut.isReady, true)
+      assert.property(uut, 'multiaddrs')
+      assert.property(uut, 'id')
 
-      assert.property(result, 'config')
-    })
-
-    it('should return a promise that resolves into an instance of IPFS in production mode.', async () => {
-      // Mock dependencies.
-      uut.create = create
-      uut.config.isProduction = true
-      const result = await uut.start()
-      // console.log('result: ', result)
-
-      assert.equal(uut.isReady, true)
-
-      assert.property(result, 'config')
+      // Output should be an instance of IPFS
+      assert.property(result, 'libp2p')
     })
 
     it('should catch and throw an error', async () => {
       try {
         // Force an error
-        sandbox.stub(uut, 'create').rejects(new Error('test error'))
+        sandbox.stub(uut, 'createNode').rejects(new Error('test error'))
 
         await uut.start()
-
         assert.fail('Unexpected code path.')
       } catch (err) {
         // console.log(err)

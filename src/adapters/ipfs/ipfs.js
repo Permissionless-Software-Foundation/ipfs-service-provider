@@ -9,10 +9,6 @@
 */
 
 // Global npm libraries
-// const IPFS = require('ipfs')
-// const IPFS = require('@chris.troutner/ipfs')
-// import IPFSembedded from 'ipfs';
-
 import { createHelia } from 'helia'
 import fs from 'fs'
 import { FsBlockstore } from 'blockstore-fs'
@@ -28,7 +24,13 @@ import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 // Local libraries
 import config from '../../../config/index.js'
 
-const IPFS_DIR = './.ipfsdata/ipfs'
+// Hack to get __dirname back.
+// https://blog.logrocket.com/alternatives-dirname-node-js-es-modules/
+import * as url from 'url'
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
+console.log('__dirname: ', __dirname)
+
+const IPFS_DIR = `${__dirname}../../../.ipfsdata/ipfs`
 
 class IpfsAdapter {
   constructor (localConfig) {
@@ -45,6 +47,11 @@ class IpfsAdapter {
 
     // Properties of this class instance.
     this.isReady = false
+
+    // Bind 'this' object to all subfunctions
+    this.start = this.start.bind(this)
+    this.createNode = this.createNode.bind(this)
+    this.stop = this.stop.bind(this)
   }
 
   // Start an IPFS node.
@@ -84,7 +91,6 @@ class IpfsAdapter {
   // It returns the node as an object.
   async createNode () {
     try {
-
       // Create block and data stores.
       const blockstore = new FsBlockstore(`${IPFS_DIR}/blockstore`)
       const datastore = new FsDatastore(`${IPFS_DIR}/datastore`)
