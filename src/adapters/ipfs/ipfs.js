@@ -156,6 +156,7 @@ class IpfsAdapter {
   }
 
   // Ensure that the directories exist to store blocks from the IPFS network.
+  // This function is called at startup, before the IPFS node is started.
   ensureBlocksDir () {
     try {
       !this.fs.existsSync(`${ROOT_DIR}.ipfsdata`) && this.fs.mkdirSync(`${ROOT_DIR}.ipfsdata`)

@@ -132,7 +132,7 @@ class IPFS {
           }
         } catch (err) {
           console.log(
-            `Error trying to hydrate peer ${thisPeer.peer}: ${err.message}`
+            ` ${thisPeer.peer}: ${err.message}`
           )
         }
 
@@ -178,6 +178,7 @@ class IPFS {
         }
 
         thisRelay.name = thisPeer[0].data.jsonLd.name
+        thisRelay.description = thisPeer[0].data.jsonLd.description
       }
 
       return relayData
