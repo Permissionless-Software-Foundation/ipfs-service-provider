@@ -85,14 +85,14 @@ class IPFS {
   async getPeers (showAll) {
     try {
       const peerData = this.ipfsCoordAdapter.ipfsCoord.thisNode.peerData
-      console.log(`peerData: ${JSON.stringify(peerData, null, 2)}`)
+      // console.log(`peerData: ${JSON.stringify(peerData, null, 2)}`)
 
       let ipfsPeers =
         await this.ipfsCoordAdapter.ipfsCoord.adapters.ipfs.getPeers()
-      console.log('ipfsPeers: ', ipfsPeers)
+      // console.log('ipfsPeers: ', ipfsPeers)
 
       ipfsPeers = this._removeDuplicatePeers(ipfsPeers)
-      console.log('filtered ipfsPeers: ', ipfsPeers)
+      // console.log('filtered ipfsPeers: ', ipfsPeers)
 
       const peerDataOut = []
 
@@ -131,8 +131,8 @@ class IPFS {
             thisPeer.peerData = thisPeerData
           }
         } catch (err) {
-          console.log(
-            ` ${thisPeer.peer}: ${err.message}`
+          console.warn(
+            `warning: ${thisPeer.peer}: ${err.message}`
           )
         }
 
@@ -176,6 +176,7 @@ class IPFS {
           thisRelay.name = ''
           continue
         }
+
 
         thisRelay.name = thisPeer[0].data.jsonLd.name
         thisRelay.description = thisPeer[0].data.jsonLd.description
