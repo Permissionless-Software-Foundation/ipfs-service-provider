@@ -29,10 +29,14 @@ export DBURL=mongodb://172.17.0.1:5555/ipfs-service-prod
 export PORT=5010
 
 # Production settings using external go-ipfs node.
-export SVC_ENV=production
+export SVC_ENV=prod
 export IPFS_HOST=172.17.0.1
 export IPFS_API_PORT=5001
 export IPFS_TCP_PORT=4001
 export IPFS_WS_PORT=4003
+
+# Set the debug level for helia-coord. 0-3.
+# 0 = no debug logs. 3 = maximum debug logs.
+export DEBUG_LEVEL=0
 
 npm start
