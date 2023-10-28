@@ -8,6 +8,7 @@ This is a 'boilerplate' repository. It's intended to be forked to start new proj
 - [pay-to-write database (P2WDB)](https://p2wdb.com/)
 - [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer)
 - [ipfs-bch-wallet-service](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service)
+- [colab-coinjoin-api](https://github.com/bch-coinjoin/colab-coinjoin-api)
 
 
 In addition to being forked as a boilerpalte, it can also be run as a stand-alone application to create a [Circuit Relay](https://cashstack.info/docs/local-back-end/circuit-relay), which can support the [PSF](https://psfoundation.info) IPFS network. It can also be used for experimenting with [helia-coord](https://github.com/Permissionless-Software-Foundation/helia-coord) and the [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) command-line wallet.
@@ -31,6 +32,7 @@ If you are interested in creating your own service provider on the IPFS network,
 
 - [P2WDB](https://github.com/Permissionless-Software-Foundation/ipfs-p2wdb-service) - the [pay-to-write database](https://p2wdb.com) is a censorship-resistent, p2p database for storing data and pinning files to the IPFS network.
 - [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer) and [ipfs-bch-wallet-service](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service) creates a web3, censorship-resistent API for apps to communicate with a blockchain. This software is documented in [the Cash Stack](https://cashstack.info).
+- [colab-coinjoin-api](https://github.com/bch-coinjoin/colab-coinjoin-api) is part of the [Collaborative CoinJoin](https://ccoinjoin.com) framework to allow wallets to easily integrate CoinJoin transaction forming, to create financial privacy.
 
 ## IPFS node
 This web server spins up an embedded IPFS ([Helia](https://github.com/ipfs/helia)) node. This node can be controlled and interrogated via the REST API. [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) is a command-line app (CLI) that can easily tap into this REST API in order to interact with the embedded IPFS node.
