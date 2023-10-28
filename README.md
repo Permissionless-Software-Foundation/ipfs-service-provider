@@ -27,7 +27,10 @@ This boilerplate extends that code to provide the basic features required to be 
 - [helia-coord](https://github.com/Permissionless-Software-Foundation/helia-coord) for coordinating service providers and consumers across the IPFS network.
 - JSON RPC for creating an API between providers and consumers.
 
-If you are interested in creating your own service provider on the IPFS network, fork this repository and start building.
+If you are interested in creating your own service provider on the IPFS network, fork this repository and start building. This repository is used in serveral PSF projects:
+
+- [P2WDB](https://github.com/Permissionless-Software-Foundation/ipfs-p2wdb-service) - the [pay-to-write database](https://p2wdb.com) is a censorship-resistent, p2p database for storing data and pinning files to the IPFS network.
+- [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer) and [ipfs-bch-wallet-service](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service) creates a web3, censorship-resistent API for app to communicate with a blockchain. This software is documented in [the Cash Stack](https://cashstack.info).
 
 ## IPFS node
 This web server spins up an embedded IPFS ([Helia](https://github.com/ipfs/helia)) node. This node can be controlled and interrogated via the REST API. [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) is a command-line app (CLI) that can easily tap into this REST API in order to interact with the embedded IPFS node.
@@ -54,7 +57,6 @@ cd ipfs-service-provider
 npm install
 npm start
 ```
-
 
 ## File Structure
 
