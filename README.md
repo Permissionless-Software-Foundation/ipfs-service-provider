@@ -46,6 +46,18 @@ This web server spins up an embedded IPFS ([Helia](https://github.com/ipfs/helia
 
 ## Installation
 
+### Production Environment
+
+The [docker](./production/docker) directory contains a Dockerfile for building a production deployment.
+
+```
+docker-compose pull
+docker-compose up -d
+```
+
+- You can bring the containers down with `docker-compose down`
+- You can bring the containers back up with `docker-compose up -d`.
+
 ### Development Environment
 
 A development environment will allow you modify the code on-the-fly and contribute to the code base of this repository. Ubuntu v20 is the recommended OS for creating a dev environment. Other operating systems may cause issues.
