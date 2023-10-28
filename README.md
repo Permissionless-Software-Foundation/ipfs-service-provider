@@ -11,7 +11,13 @@ This is a 'boilerplate' repository. It's intended to be forked to start new proj
 - [colab-coinjoin-api](https://github.com/bch-coinjoin/colab-coinjoin-api)
 
 
-In addition to being forked as a boilerpalte, it can also be run as a stand-alone application to create a [Circuit Relay](https://cashstack.info/docs/local-back-end/circuit-relay), which can support the [PSF](https://psfoundation.info) IPFS network. It can also be used for experimenting with [helia-coord](https://github.com/Permissionless-Software-Foundation/helia-coord) and the [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) command-line wallet.
+In addition to being forked as a boilerplate, it can also be run as a stand-alone application to create a [Circuit Relay](https://cashstack.info/docs/local-back-end/circuit-relay), which can support the [PSF](https://psfoundation.info) IPFS network. It can also be used for experimenting with [helia-coord](https://github.com/Permissionless-Software-Foundation/helia-coord) and the [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) command-line wallet.
+
+### Video Demo
+
+A video demo shows you how to quickly setup ipfs-service-provider and start interacting with its IPFS node using the [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) command-line app.
+
+- [ipfs-service-provider Demo Video](https://youtu.be/_9Xvh3aMrFg)
 
 ## Boilerplate
 
