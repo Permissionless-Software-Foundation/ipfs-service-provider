@@ -53,7 +53,4 @@ function applyPassportMods (passport) {
   return true
 }
 
-// For testing
-// export default { passport, passportCallback };
-// export default applyPassportMods
 export { applyPassportMods, passportCallback }

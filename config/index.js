@@ -14,8 +14,4 @@ if (env === 'test') {
   config = production
 }
 
-// const importStr = `./env/${env}.js`
-// console.log('importStr: ', importStr)
-// import config from importStr
-
 export default Object.assign({}, common, config)

@@ -26,7 +26,10 @@ class IpfsCoordAdapter {
 
 const ipfs = {
   ipfsAdapter: new IpfsAdapter(),
-  ipfsCoordAdapter: new IpfsCoordAdapter()
+  ipfsCoordAdapter: new IpfsCoordAdapter(),
+  getStatus: async () => {},
+  getPeers: async () => {},
+  getRelays: async () => {}
 }
 ipfs.ipfs = ipfs.ipfsAdapter.ipfs
 
