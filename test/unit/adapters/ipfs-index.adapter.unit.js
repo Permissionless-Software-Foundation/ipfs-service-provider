@@ -141,4 +141,80 @@ describe('#IPFS-adapter-index', () => {
       assert.equal(result.length, inArray.length - 2)
     })
   })
+
+  describe('#getPeers', () => {
+    it('should return an array of current JSON data about each peer when showAll is true', async () => {
+      // Mock dependencies
+      uut.ipfsCoordAdapter.ipfsCoord = {
+        thisNode: {
+          peerData: [{ from: 'a', data: { jsonLd: { name: 'a', protocol: 'test', version: '1' } } }, { from: 'b' }]
+        },
+        adapters: {
+          ipfs: {
+            getPeers: async () => ['a', 'b']
+          }
+        }
+      }
+
+      const result = await uut.getPeers(true)
+
+      assert.isArray(result)
+    })
+
+    it('should catch, report, and throw errors', async () => {
+      try {
+        // Force an error
+        uut.ipfsCoordAdapter.ipfsCoord = {
+          thisNode: {},
+          adapters: {
+            ipfs: {
+              getPeers: async () => { throw new Error('test error') }
+            }
+          }
+        }
+
+        await uut.getPeers()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log('err.message: ', err.message)
+        assert.include(err.message, 'test error')
+      }
+    })
+  })
+
+  describe('#getRelays', () => {
+    it('should return known relays', () => {
+      uut.ipfsCoordAdapter.ipfsCoord = {
+        thisNode: {
+          peerData: [{ from: 'a', data: { jsonLd: { name: 'a', description: 'test' } } }, { from: 'b' }],
+          relayData: [{ ipfsId: 'c' }, { ipfsId: 'a' }]
+        }
+      }
+
+      const result = uut.getRelays()
+      // console.log('result: ', result)
+
+      assert.isArray(result)
+      assert.equal(result.length, 2)
+      assert.property(result[0], 'name')
+      assert.property(result[0], 'description')
+      assert.property(result[1], 'name')
+      assert.property(result[1], 'description')
+    })
+
+    it('should catch, report, and throw errors', () => {
+      try {
+        // Force an error
+        uut.ipfsCoordAdapter.ipfsCoord = { thisNode: {} }
+
+        uut.getRelays()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log('err.message: ', err.message)
+        assert.include(err.message, 'Cannot read')
+      }
+    })
+  })
 })

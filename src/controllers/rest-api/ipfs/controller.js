@@ -4,8 +4,6 @@
 
 import wlogger from '../../../adapters/wlogger.js'
 
-let _this
-
 class IpfsRESTControllerLib {
   constructor (localConfig = {}) {
     // Dependency Injection.
@@ -26,7 +24,11 @@ class IpfsRESTControllerLib {
     // this.UserModel = this.adapters.localdb.Users
     // this.userUseCases = this.useCases.user
 
-    _this = this
+    // Bind 'this' object to all subfunctions
+    this.getStatus = this.getStatus.bind(this)
+    this.getPeers = this.getPeers.bind(this)
+    this.getRelays = this.getRelays.bind(this)
+    this.handleError = this.handleError.bind(this)
   }
 
   /**
@@ -41,13 +43,13 @@ class IpfsRESTControllerLib {
    */
   async getStatus (ctx) {
     try {
-      const status = await _this.adapters.ipfs.getStatus()
+      const status = await this.adapters.ipfs.getStatus()
 
       ctx.body = { status }
     } catch (err) {
       wlogger.error('Error in ipfs/controller.js/getStatus(): ')
       // ctx.throw(422, err.message)
-      _this.handleError(ctx, err)
+      this.handleError(ctx, err)
     }
   }
 
@@ -56,26 +58,26 @@ class IpfsRESTControllerLib {
     try {
       const showAll = ctx.request.body.showAll
 
-      const peers = await _this.adapters.ipfs.getPeers(showAll)
+      const peers = await this.adapters.ipfs.getPeers(showAll)
 
       ctx.body = { peers }
     } catch (err) {
       wlogger.error('Error in ipfs/controller.js/getPeers(): ')
       // ctx.throw(422, err.message)
-      _this.handleError(ctx, err)
+      this.handleError(ctx, err)
     }
   }
 
   // Get data about the known Circuit Relays. Hydrate with data from peers list.
   async getRelays (ctx) {
     try {
-      const relays = await _this.adapters.ipfs.getRelays()
+      const relays = await this.adapters.ipfs.getRelays()
 
       ctx.body = { relays }
     } catch (err) {
       wlogger.error('Error in ipfs/controller.js/getRelays(): ')
       // ctx.throw(422, err.message)
-      _this.handleError(ctx, err)
+      this.handleError(ctx, err)
     }
   }
 

@@ -174,9 +174,9 @@ class IPFS {
         // If the peer couldn't be found, skip.
         if (!thisPeer.length) {
           thisRelay.name = ''
+          thisRelay.description = ''
           continue
         }
-
 
         thisRelay.name = thisPeer[0].data.jsonLd.name
         thisRelay.description = thisPeer[0].data.jsonLd.description

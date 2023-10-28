@@ -11,7 +11,7 @@ import Validators from '../middleware/validators.js'
 
 // let _this
 
-class BchRouter {
+class IpfsRouter {
   constructor (localConfig = {}) {
     // Dependency Injection.
     this.adapters = localConfig.adapters
@@ -66,4 +66,4 @@ class BchRouter {
 }
 
 // module.exports = BchRouter
-export default BchRouter
+export default IpfsRouter
