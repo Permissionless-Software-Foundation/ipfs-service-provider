@@ -1,5 +1,5 @@
 /*
-  Unit tests for the REST API handler for the /users endpoints.
+  Unit tests for the REST API handler for the /ipfs endpoints.
 */
 
 // Public npm libraries

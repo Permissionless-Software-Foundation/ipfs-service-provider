@@ -59,10 +59,6 @@ class IpfsRouter {
     app.use(this.router.routes())
     app.use(this.router.allowedMethods())
   }
-
-  // async getStatus (ctx, next) {
-  //   await _this.ipfsRESTController.getStatus(ctx, next)
-  // }
 }
 
 // module.exports = BchRouter
