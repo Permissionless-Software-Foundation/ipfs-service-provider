@@ -134,8 +134,21 @@ describe('#IPFS-adapter', () => {
     })
 
     it('should create an IPFS node from Helia', async () => {
+      uut.config.isCircuitRelay = false
       const result = await uut.createNode()
       // console.log('result: ', result)
+
+      // Assert the returned IPFS node has expected properties
+      assert.property(result, 'libp2p')
+      assert.property(result, 'blockstore')
+
+      // Stop the IPFS node
+      await result.stop()
+    })
+
+    it('should create a Circuit Relay if configured', async () => {
+      uut.config.isCircuitRelay = true
+      const result = await uut.createNode()
 
       // Assert the returned IPFS node has expected properties
       assert.property(result, 'libp2p')
