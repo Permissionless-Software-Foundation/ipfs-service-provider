@@ -19,7 +19,9 @@ import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 import { bootstrap } from '@libp2p/bootstrap'
 import { identifyService } from 'libp2p/identify'
+import { circuitRelayServer, circuitRelayTransport } from 'libp2p/circuit-relay'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
+import { webSockets } from '@libp2p/websockets'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -94,17 +96,32 @@ class IpfsAdapter {
       const blockstore = new FsBlockstore(`${IPFS_DIR}/blockstore`)
       const datastore = new FsDatastore(`${IPFS_DIR}/datastore`)
 
+      // Configure services
+      const services = {
+        identify: identifyService(),
+        pubsub: gossipsub({ allowPublishToZeroPeers: true })
+      }
+      if (this.config.isCircuitRelay) {
+        console.log('Helia (IPFS) node IS configured as Circuit Relay')
+        services.relay = circuitRelayServer()
+      } else {
+        console.log('Helia (IPFS) node IS NOT configured as Circuit Relay')
+      }
+
       // libp2p is the networking layer that underpins Helia
       const libp2p = await this.createLibp2p({
         datastore,
         addresses: {
           listen: [
             '/ip4/127.0.0.1/tcp/0',
-            `/ip4/0.0.0.0/tcp/${this.config.ipfsTcpPort}`
+            `/ip4/0.0.0.0/tcp/${this.config.ipfsTcpPort}`,
+            `/ip4/0.0.0.0/tcp/${this.config.ipfsWsPort}/ws`
           ]
         },
         transports: [
-          tcp()
+          tcp(),
+          webSockets(),
+          circuitRelayTransport({ discoverRelays: 3 })
         ],
         connectionEncryption: [
           noise()
@@ -128,11 +145,12 @@ class IpfsAdapter {
             ]
           })
         ],
-        services: {
-          identify: identifyService(),
-          pubsub: gossipsub({ allowPublishToZeroPeers: true })
-        }
+        services
       })
+
+      // console.log(`Node started with id ${libp2p.peerId.toString()}`)
+      // console.log('Listening on:')
+      // libp2p.getMultiaddrs().forEach((ma) => console.log(ma.toString()))
 
       // create a Helia node
       const helia = await createHelia({
