@@ -150,6 +150,41 @@ describe('#IPFS REST API', () => {
     })
   })
 
+  describe('#POST /connect', () => {
+    it('should return 422 status on biz logic error', async () => {
+      try {
+        // Force an error
+        sandbox.stub(uut.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.adapters.ipfs, 'connectToPeer').rejects(new Error('test error'))
+
+        ctx.request.body = {
+          multiaddr: '/ip4/161.35.99.207/tcp/4001/p2p/12D3KooWDtj9cfj1SKuLbDNKvKRKSsGN8qivq9M8CYpLPDpcD5pu'
+        }
+
+        await uut.connect(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.adapters.ipfs, 'connectToPeer').resolves({ success: true })
+
+      ctx.request.body = {
+        multiaddr: '/ip4/161.35.99.207/tcp/4001/p2p/12D3KooWDtj9cfj1SKuLbDNKvKRKSsGN8qivq9M8CYpLPDpcD5pu'
+      }
+
+      await uut.connect(ctx)
+      // console.log('ctx.body: ', ctx.body)
+
+      assert.property(ctx.body, 'success')
+      assert.equal(ctx.body.success, true)
+    })
+  })
+
   describe('#handleError', () => {
     it('should still throw error if there is no message', () => {
       try {

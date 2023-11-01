@@ -29,6 +29,7 @@ class IpfsRESTControllerLib {
     this.getPeers = this.getPeers.bind(this)
     this.getRelays = this.getRelays.bind(this)
     this.handleError = this.handleError.bind(this)
+    this.connect = this.connect.bind(this)
   }
 
   /**
@@ -76,6 +77,23 @@ class IpfsRESTControllerLib {
       ctx.body = { relays }
     } catch (err) {
       wlogger.error('Error in ipfs/controller.js/getRelays(): ')
+      // ctx.throw(422, err.message)
+      this.handleError(ctx, err)
+    }
+  }
+
+  async connect (ctx) {
+    try {
+      const multiaddr = ctx.request.body.multiaddr
+      const getDetails = ctx.request.body.getDetails
+
+      // console.log('this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.adapters.ipfs: ', this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.adapters.ipfs)
+      const result = await this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.adapters.ipfs.connectToPeer({ multiaddr, getDetails })
+      // console.log('result: ', result)
+
+      ctx.body = result
+    } catch (err) {
+      wlogger.error('Error in ipfs/controller.js/connect():', err)
       // ctx.throw(422, err.message)
       this.handleError(ctx, err)
     }

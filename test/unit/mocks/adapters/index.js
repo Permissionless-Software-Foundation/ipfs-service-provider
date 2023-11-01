@@ -15,6 +15,11 @@ class IpfsAdapter {
 class IpfsCoordAdapter {
   constructor () {
     this.ipfsCoord = {
+      adapters: {
+        ipfs: {
+          connectToPeer: async () => {}
+        }
+      },
       useCases: {
         peer: {
           sendPrivateMessage: () => {}
