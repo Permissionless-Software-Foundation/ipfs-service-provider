@@ -78,7 +78,8 @@ class IpfsCoordAdapter {
       circuitRelayInfo,
       apiInfo: this.config.apiInfo,
       announceJsonLd: this.config.announceJsonLd,
-      debugLevel: this.config.debugLevel
+      debugLevel: this.config.debugLevel,
+      v1Relays: this.config.v1Relays
     }
 
     // Production env uses external go-ipfs node.

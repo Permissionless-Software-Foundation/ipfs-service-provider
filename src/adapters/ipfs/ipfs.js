@@ -108,6 +108,30 @@ class IpfsAdapter {
         console.log('Helia (IPFS) node IS NOT configured as Circuit Relay')
       }
 
+      let bootstrapList = [
+
+        // launchpad-p2wdb-service (Launchpad pinning service)
+        '/ip4/137.184.13.92/tcp/4001/p2p/12D3KooWPpBXhhAeoCZCGuQ3KR4xwHzzvtP57f6zLmo8P7ZFBJFE',
+
+        // PSFoundation.info metrics
+        '/ip4/5.161.72.148/tcp/4001/p2p/12D3KooWDL1kPixc6hcT4s7teWGufrxXmZFD1kPeGdDrsKgYrFUt',
+
+        // PSFoundation.info P2WDB
+        '/ip4/5.161.72.148/tcp/4101/p2p/12D3KooWHz1sRB94EEVRQRJvUX9MyRm3xhr4QSyCoJbTdu2AYheq',
+
+        // TokenTiger.com backup P2WDB
+        '/ip4/161.35.99.207/tcp/4001/p2p/12D3KooWDtj9cfj1SKuLbDNKvKRKSsGN8qivq9M8CYpLPDpcD5pu',
+
+        // helia-p2wdb-dev-server-01 prototype P2WDB server using Helia (Token Tiger)
+        '/ip4/137.184.93.145/tcp/4001/p2p/12D3KooWGZCpD5Ue3CJCBBEKowcuKEgeVKbTM7VMbJ8xm1bqST1j',
+
+        // helia-p2wdb-dev-server-01 prototype P2WDB server using Helia (FullStack.cash)
+        '/ip4/78.46.129.7/tcp/7001/p2p/12D3KooWRqe7TwTj8apPxmpPqPgHiv7qv5YBJTo1VeQ7zrdyA2HN'
+
+      ]
+      bootstrapList = bootstrapList.concat(this.config.v1Relays)
+      // console.log('bootstrapList: ', bootstrapList)
+
       // libp2p is the networking layer that underpins Helia
       const libp2p = await this.createLibp2p({
         datastore,
@@ -131,33 +155,7 @@ class IpfsAdapter {
         ],
         peerDiscovery: [
           bootstrap({
-            list: [
-
-              // launchpad-p2wdb-service (Launchpad pinning service)
-              '/ip4/137.184.13.92/tcp/4001/p2p/12D3KooWPpBXhhAeoCZCGuQ3KR4xwHzzvtP57f6zLmo8P7ZFBJFE',
-
-              // PSFoundation.info metrics
-              '/ip4/5.161.72.148/tcp/4001/p2p/12D3KooWDL1kPixc6hcT4s7teWGufrxXmZFD1kPeGdDrsKgYrFUt',
-
-              // PSFoundation.info P2WDB
-              '/ip4/5.161.72.148/tcp/4101/p2p/12D3KooWHz1sRB94EEVRQRJvUX9MyRm3xhr4QSyCoJbTdu2AYheq',
-
-              // TokenTiger.com backup P2WDB
-              '/ip4/161.35.99.207/tcp/4001/p2p/12D3KooWDtj9cfj1SKuLbDNKvKRKSsGN8qivq9M8CYpLPDpcD5pu',
-
-              // helia-p2wdb-dev-server-01 prototype P2WDB server using Helia (Token Tiger)
-              '/ip4/137.184.93.145/tcp/4001/p2p/12D3KooWGZCpD5Ue3CJCBBEKowcuKEgeVKbTM7VMbJ8xm1bqST1j',
-
-              // v1 & v2 Circuit Relay (Token Tiger)
-              '/ip4/137.184.93.145/tcp/6001/p2p/12D3KooWBTkiEn4fSGYRMtNT2ZTKhjguymGFHjiJeVVPSwEjXJwq',
-
-              // v1 & v2 Circuit Relay server (FullStack.cash)
-              '/ip4/78.46.129.7/tcp/4002/p2p/12D3KooWBigV2M3Sx4KmM3m2DQMznnZzyNuXPawPsZWRpZmiJ8Kp',
-
-              // helia-p2wdb-dev-server-01 prototype P2WDB server using Helia (FullStack.cash)
-              '/ip4/78.46.129.7/tcp/7001/p2p/12D3KooWBigV2M3Sx4KmM3m2DQMznnZzyNuXPawPsZWRpZmiJ8Kp'
-
-            ]
+            list: bootstrapList
           })
         ],
         services
