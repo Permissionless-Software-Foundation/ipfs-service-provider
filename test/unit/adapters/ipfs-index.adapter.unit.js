@@ -195,12 +195,12 @@ describe('#IPFS-adapter-index', () => {
       const result = uut.getRelays()
       // console.log('result: ', result)
 
-      assert.isArray(result)
-      assert.equal(result.length, 2)
-      assert.property(result[0], 'name')
-      assert.property(result[0], 'description')
-      assert.property(result[1], 'name')
-      assert.property(result[1], 'description')
+      assert.isArray(result.v2Relays)
+      assert.equal(result.v2Relays.length, 2)
+      assert.property(result.v2Relays[0], 'name')
+      assert.property(result.v2Relays[0], 'description')
+      assert.property(result.v2Relays[1], 'name')
+      assert.property(result.v2Relays[1], 'description')
     })
 
     it('should catch, report, and throw errors', () => {
