@@ -4,7 +4,20 @@
 
 ## Overview
 
-This is a 'boilerplate' repository. It's intended to be forked to start new projects. However, it can also be run as a stand-alone Circuit Relay, for supporting the PSF network.
+This is a 'boilerplate' repository. It's intended to be forked to start new projects. Some code projects that are forks of this repository and regularly pull in changes:
+- [pay-to-write database (P2WDB)](https://p2wdb.com/)
+- [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer)
+- [ipfs-bch-wallet-service](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service)
+- [colab-coinjoin-api](https://github.com/bch-coinjoin/colab-coinjoin-api)
+
+
+In addition to being forked as a boilerplate, it can also be run as a stand-alone application to create a [Circuit Relay](https://cashstack.info/docs/local-back-end/circuit-relay), which can support the [PSF](https://psfoundation.info) IPFS network. It can also be used for experimenting with [helia-coord](https://github.com/Permissionless-Software-Foundation/helia-coord) and the [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) command-line wallet.
+
+### Video Demo
+
+A video demo shows you how to quickly setup ipfs-service-provider and start interacting with its IPFS node using the [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) command-line app.
+
+- [ipfs-service-provider Demo Video](https://youtu.be/_9Xvh3aMrFg)
 
 ## Boilerplate
 
@@ -12,62 +25,34 @@ This repository has been forked from the [koa-api-boilerplate](https://github.co
 
 - [Koa](https://koajs.com/) framework for REST APIs
 - User management
-- Access and rate-limit control using [JWT tokens](https://jwt.io/).
+- Access and rate-limit control (authentication and authorization) using [JWT tokens](https://jwt.io/)
+- Logging system with API access
+- Email contact integration
 
 This boilerplate extends that code to provide the basic features required to be a 'service provider' on the [IPFS](https://ipfs.io) network. This is a core concept in the [web3 Cash Stack](https://cashstack.info). These basic features include:
 
-- [ipfs-coord](https://www.npmjs.com/package/ipfs-coord) for coordinating service providers and consumers across the IPFS network.
+- [helia-coord](https://github.com/Permissionless-Software-Foundation/helia-coord) for coordinating service providers and consumers across the IPFS network.
 - JSON RPC for creating an API between providers and consumers.
 
-If you are interested in creating your own service provider on the IPFS network, fork this repository and start building.
+If you are interested in creating your own service provider on the IPFS network, fork this repository and start building. This repository is used in serveral PSF projects:
 
-## Branches
-This code repository was refactored from CommonJS format to ECMA Script Modules (ESM) format because js-ipfs made the same change, and this repository depends heavily on that one. A CommonJS format version of this code repository is maintained in the [`cjs` branch](https://github.com/Permissionless-Software-Foundation/ipfs-service-provider/tree/cjs). This is useful for projects that can not make use of ESM yet, like [Electron.js](https://www.electronjs.org/) and [P2WDB](https://p2wdb.com).
+- [P2WDB](https://github.com/Permissionless-Software-Foundation/ipfs-p2wdb-service) - the [pay-to-write database](https://p2wdb.com) is a censorship-resistent, p2p database for storing data and pinning files to the IPFS network.
+- [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer) and [ipfs-bch-wallet-service](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service) creates a web3, censorship-resistent API for apps to communicate with a blockchain. This software is documented in [the Cash Stack](https://cashstack.info).
+- [colab-coinjoin-api](https://github.com/bch-coinjoin/colab-coinjoin-api) is part of the [Collaborative CoinJoin](https://ccoinjoin.com) framework to allow wallets to easily integrate CoinJoin transaction forming, to create financial privacy.
 
-## Circuit Relay
+## IPFS node
+This web server spins up an embedded IPFS ([Helia](https://github.com/ipfs/helia)) node. This node can be controlled and interrogated via the REST API. [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) is a command-line app (CLI) that can easily tap into this REST API in order to interact with the embedded IPFS node.
 
-This 'production' environment for this boilerplate sets up a series of Docker containers, orchestrated with Docker Compose. This boilerplate code can be run without modification, in order to set up a [Circuit Relay](https://docs.libp2p.io/concepts/circuit-relay/) and support the PSF network. You can get paid a [bounty](https://github.com/Permissionless-Software-Foundation/bounties) for doing so, in PSF tokens. See the section below on setting up a Production Docker Container.
-
-## Features
-
-This project covers basic necessities of most APIs.
-
-- [Koa](https://koajs.com/) framework for REST APIs
-- Authentication (passport & jwt)
-- Database (mongoose)
-- Testing (mocha)
-- Doc generation with apidoc
-- Linting using [Standard](https://github.com/standard/standard)
-- Packaged for production environment as a Docker container
-- [ipfs-coord](https://www.npmjs.com/package/ipfs-coord) for coordinating peers over IPFS
-- JSON RPC for mirroring the REST API over IPFS
+- *Video link will be added here*
 
 ## Requirements
 
-- node **^14.18.2**
-- npm **^8.3.0**
+- node **^16.20.2**
+- npm **^8.19.4**
 - Docker **^20.10.8**
 - Docker Compose **^1.27.4**
 
 ## Installation
-
-### Development Environment
-
-**Note:** This software now uses an external go-ipfs IPFS node. The instructions below have not been updated to reflect this.
-
-A development environment will allow you modify the code on-the-fly and contribute to the code base of this repository. [PM2](https://www.npmjs.com/package/pm2) is recommended for running this code base as an IPFS Circuit Relay.
-
-- [Video: Installing ipfs-service-provider](https://youtu.be/Z0NsboIVN44)
-- [Step-by-step installation instructions](https://gist.github.com/christroutner/3304a71d4c12a3a3e1664a438f64d9d0)
-
-```bash
-git clone https://github.com/Permissionless-Software-Foundation/ipfs-service-provider
-cd ipfs-service-provider
-./install-mongo-sh
-sudo npm install -g node-pre-gyp
-npm install
-./ipfs-service-provider.sh
-```
 
 ### Production Environment
 
@@ -78,35 +63,37 @@ docker-compose pull
 docker-compose up -d
 ```
 
-You can bring the containers back up with `docker-compose up -d`.
+- You can bring the containers down with `docker-compose down`
+- You can bring the containers back up with `docker-compose up -d`.
 
-### Operation Notes
+### Development Environment
 
-- There is a memory leak in the version of js-ipfs. The app is currently configured to shut down every 8 hours to flush memory. It relies on a process manager like pm2, Docker, or systemd to restart the app after it shuts down, in order to ensure continuous operation.
+A development environment will allow you modify the code on-the-fly and contribute to the code base of this repository. Ubuntu v20 is the recommended OS for creating a dev environment. Other operating systems may cause issues.
 
-- The PSF network operates as a private network. It does not connect or interact with the wider PSF network, relying instead on gateways to bridge the two networks, when they need to share content. This improves the performance and experience for everyone in the PSF network. To join the network, you'll need to add the [swarm.key](./swarm.key) file to the IPFS data folder.
+```bash
+git clone https://github.com/Permissionless-Software-Foundation/ipfs-service-provider
+cd ipfs-service-provider
+./install-mongo-sh
+npm install
+npm start
+```
 
-- [Instructions on setting up IPFS private networks.](https://github.com/ipfs/go-ipfs/blob/master/docs/experimental-features.md#private-networks)
-- For external installations, the swarm.key file will typically go in `~/.ipfs/swarm.key`
-- For production Docker containers, the key would go in `ipfs-service-provider/production/data/go-ipfs/data/swarm.key`
+## File Structure
 
-## Structure
-
-The file layout of this repository differs from the koa-api-boilerplate. Instead, it follows the file layout of [Clean Architecture](https://christroutner.github.io/trouts-blog/blog/clean-architecture).
+The file layout of this repository follows the file layout of [Clean Architecture](https://christroutner.github.io/trouts-blog/blog/clean-architecture). Understaning the principles laid out this article will help developers navigate the code base.
 
 ## Usage
 
 - `npm start` Start server on live mode
 - `npm run docs` Generate API documentation
 - `npm test` Run mocha tests
-- `docker-compose build` Build a 'production' Docker container
-- `docker-compose up` Run the docker container
 
 ## Documentation
 
-API documentation is written inline and generated by [apidoc](http://apidocjs.com/).
+API documentation is written inline and generated by [apidoc](http://apidocjs.com/). Docs can be generated with this command:
+- `npm run docs`
 
-Visit `http://localhost:5000/docs/` to view docs
+Visit `http://localhost:5020/` to view docs
 
 There is additional developer documentation in the [dev-docs directory](./dev-docs).
 

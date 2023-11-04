@@ -90,11 +90,19 @@ export default {
   debugLevel: process.env.DEBUG_LEVEL ? parseInt(process.env.DEBUG_LEVEL) : 2,
 
   // Settings for production, using external go-ipfs node.
-  isProduction: process.env.SVC_ENV === 'production' ? true : false,
+  isProduction: process.env.SVC_ENV === 'prod' ? true : false,
   ipfsHost: process.env.IPFS_HOST ? process.env.IPFS_HOST : 'localhost',
   ipfsApiPort: process.env.IPFS_API_PORT
     ? parseInt(process.env.IPFS_API_PORT)
     : 5001,
 
-  chatPubSubChan: 'psf-ipfs-chat-001'
+  chatPubSubChan: 'psf-ipfs-chat-001',
+
+  v1Relays: [
+    // v1 & v2 Circuit Relay (Token Tiger)
+    '/ip4/137.184.93.145/tcp/6002/p2p/12D3KooWBTkiEn4fSGYRMtNT2ZTKhjguymGFHjiJeVVPSwEjXJwq',
+
+    // v1 & v2 Circuit Relay server (FullStack.cash)
+    '/ip4/78.46.129.7/tcp/4002/p2p/12D3KooWR8URLT2d85MSKMUAHB2poADNz1jbrsGNL1GAjA1cZtTY'
+  ]
 }
