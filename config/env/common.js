@@ -97,11 +97,11 @@ export default {
 
   chatPubSubChan: 'psf-ipfs-chat-001',
 
-  v1Relays: [
-    // v1 & v2 Circuit Relay (Token Tiger)
-    '/ip4/137.184.93.145/tcp/6002/p2p/12D3KooWBTkiEn4fSGYRMtNT2ZTKhjguymGFHjiJeVVPSwEjXJwq',
+  bootstrapRelays: [
+    // v2 Circuit Relay (Token Tiger)
+    '/ip4/137.184.93.145/tcp/4001/p2p/12D3KooWGZCpD5Ue3CJCBBEKowcuKEgeVKbTM7VMbJ8xm1bqST1j',
 
-    // v1 & v2 Circuit Relay server (FullStack.cash)
-    '/ip4/78.46.129.7/tcp/4002/p2p/12D3KooWR8URLT2d85MSKMUAHB2poADNz1jbrsGNL1GAjA1cZtTY'
+    // v2 Circuit Relay server (FullStack.cash)
+    // '/ip4/78.46.129.7/tcp/4002/p2p/12D3KooWR8URLT2d85MSKMUAHB2poADNz1jbrsGNL1GAjA1cZtTY'
   ]
 }
