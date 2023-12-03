@@ -22,6 +22,8 @@ import { identifyService } from 'libp2p/identify'
 import { circuitRelayServer, circuitRelayTransport } from 'libp2p/circuit-relay'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { webSockets } from '@libp2p/websockets'
+import publicIp from 'public-ip'
+import { multiaddr } from '@multiformats/multiaddr'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -41,6 +43,8 @@ class IpfsAdapter {
     this.config = config
     this.fs = fs
     this.createLibp2p = createLibp2p
+    this.publicIp = publicIp
+    this.multiaddr = multiaddr
 
     // Properties of this class instance.
     this.isReady = false
@@ -62,13 +66,20 @@ class IpfsAdapter {
       const ipfs = await this.createNode()
       // console.log('ipfs: ', ipfs)
 
+      this.id = ipfs.libp2p.peerId.toString()
+      console.log('IPFS ID: ', this.id)
+
+      // Attempt to guess our ip4 IP address.
+      const ip4 = await this.publicIp.v4()
+      let detectedMultiaddr = `/ip4/${ip4}/tcp/${this.config.ipfsTcpPort}/p2p/${this.id}`
+      detectedMultiaddr = this.multiaddr(detectedMultiaddr)
+
       // Get the multiaddrs for the node.
       const multiaddrs = ipfs.libp2p.getMultiaddrs()
+      multiaddrs.push(detectedMultiaddr)
       console.log('Multiaddrs: ', multiaddrs)
 
       this.multiaddrs = multiaddrs
-      this.id = ipfs.libp2p.peerId.toString()
-      console.log('IPFS ID: ', this.id)
 
       // Signal that this adapter is ready.
       this.isReady = true
