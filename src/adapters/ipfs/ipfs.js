@@ -24,6 +24,7 @@ import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { webSockets } from '@libp2p/websockets'
 import publicIp from 'public-ip'
 import { multiaddr } from '@multiformats/multiaddr'
+import { webRTC } from '@libp2p/webrtc'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -149,13 +150,15 @@ class IpfsAdapter {
           listen: [
             '/ip4/127.0.0.1/tcp/0',
             `/ip4/0.0.0.0/tcp/${this.config.ipfsTcpPort}`,
-            `/ip4/0.0.0.0/tcp/${this.config.ipfsWsPort}/ws`
+            `/ip4/0.0.0.0/tcp/${this.config.ipfsWsPort}/ws`,
+            '/webrtc'
           ]
         },
         transports: [
           tcp(),
           webSockets(),
-          circuitRelayTransport({ discoverRelays: 3 })
+          circuitRelayTransport({ discoverRelays: 3 }),
+          webRTC()
         ],
         connectionEncryption: [
           noise()
