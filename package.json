@@ -34,7 +34,7 @@
     "blockstore-fs": "1.1.6",
     "datastore-fs": "9.1.5",
     "glob": "7.1.6",
-    "helia": "2.0.3",
+    "helia": "2.1.0",
     "helia-coord": "1.2.18",
     "jsonrpc-lite": "2.2.0",
     "jsonwebtoken": "8.5.1",
