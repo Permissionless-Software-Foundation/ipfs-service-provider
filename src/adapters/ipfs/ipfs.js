@@ -18,8 +18,9 @@ import { tcp } from '@libp2p/tcp'
 import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 // import { bootstrap } from '@libp2p/bootstrap'
-import { identifyService } from 'libp2p/identify'
-import { circuitRelayServer, circuitRelayTransport } from 'libp2p/circuit-relay'
+import { identify } from '@libp2p/identify'
+// import { circuitRelayServer, circuitRelayTransport } from 'libp2p/circuit-relay'
+import { circuitRelayServer, circuitRelayTransport } from '@libp2p/circuit-relay-v2'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { webSockets } from '@libp2p/websockets'
 import publicIp from 'public-ip'
@@ -110,7 +111,7 @@ class IpfsAdapter {
 
       // Configure services
       const services = {
-        identify: identifyService(),
+        identify: identify(),
         pubsub: gossipsub({ allowPublishToZeroPeers: true })
       }
       if (this.config.isCircuitRelay) {
