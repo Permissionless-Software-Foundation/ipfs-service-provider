@@ -127,7 +127,7 @@ class IpfsAdapter {
             defaultDurationLimit: 2 * 60 * 1000, // the default maximum amount of time a relayed connection can be open for
             defaultDataLimit: BigInt(2 << 7), // the default maximum number of bytes that can be transferred over a relayed connection
             maxInboundHopStreams: 32, // how many inbound HOP streams are allow simultaneously
-            maxOutboundHopStreams: 64, // how many outbound HOP streams are allow simultaneously
+            maxOutboundHopStreams: 64 // how many outbound HOP streams are allow simultaneously
           }
         })
       } else {
