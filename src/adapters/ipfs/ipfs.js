@@ -26,6 +26,8 @@ import { webSockets } from '@libp2p/websockets'
 import publicIp from 'public-ip'
 import { multiaddr } from '@multiformats/multiaddr'
 import { webRTC } from '@libp2p/webrtc'
+// import { keychain } from '@libp2p/keychain'
+// import { defaultLogger } from '@libp2p/logger'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -38,6 +40,10 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 const ROOT_DIR = `${__dirname}../../../`
 const IPFS_DIR = `${__dirname}../../../.ipfsdata/ipfs`
+
+// const keychainInit = {
+//   pass: 'very long, very secure password'
+// }
 
 class IpfsAdapter {
   constructor (localConfig) {
@@ -109,6 +115,18 @@ class IpfsAdapter {
       const blockstore = new FsBlockstore(`${IPFS_DIR}/blockstore`)
       const datastore = new FsDatastore(`${IPFS_DIR}/datastore`)
 
+      // Create an identity
+      // let peerId
+      // const chain = keychain(keychainInit)({
+      //   datastore,
+      //   logger: defaultLogger()
+      // })
+      // const selfKey = new Key('/pkcs8/self')
+      // if (await datastore.has(selfKey)) {
+      //   // load the peer id from the keychain
+      //   peerId = await chain.exportPeerId('self')
+      // }
+
       // Configure services
       const services = {
         identify: identify(),
@@ -146,6 +164,7 @@ class IpfsAdapter {
 
       // libp2p is the networking layer that underpins Helia
       const libp2p = await this.createLibp2p({
+        // peerId,
         datastore,
         addresses: {
           listen: [
