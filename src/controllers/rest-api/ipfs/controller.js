@@ -30,6 +30,7 @@ class IpfsRESTControllerLib {
     this.getRelays = this.getRelays.bind(this)
     this.handleError = this.handleError.bind(this)
     this.connect = this.connect.bind(this)
+    this.getThisNode = this.getThisNode.bind(this)
   }
 
   /**
@@ -94,6 +95,29 @@ class IpfsRESTControllerLib {
       ctx.body = result
     } catch (err) {
       wlogger.error('Error in ipfs/controller.js/connect():', err)
+      // ctx.throw(422, err.message)
+      this.handleError(ctx, err)
+    }
+  }
+
+  /**
+   * @api {get} /ipfs/node Get a copy of the thisNode object from helia-coord
+   * @apiPermission public
+   * @apiName GetThisNode
+   * @apiGroup REST BCH
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X GET localhost:5001/ipfs/node
+   *
+   */
+  async getThisNode (ctx) {
+    try {
+      // const status = await this.adapters.ipfs.getStatus()
+      const thisNode = this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
+
+      ctx.body = { thisNode }
+    } catch (err) {
+      wlogger.error('Error in ipfs/controller.js/getThisNode(): ')
       // ctx.throw(422, err.message)
       this.handleError(ctx, err)
     }
