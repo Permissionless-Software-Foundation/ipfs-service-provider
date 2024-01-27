@@ -24,7 +24,7 @@ import { circuitRelayServer, circuitRelayTransport } from 'libp2p/circuit-relay'
 // import { circuitRelayServer, circuitRelayTransport } from '@libp2p/circuit-relay-v2'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { webSockets } from '@libp2p/websockets'
-import publicIp from 'public-ip'
+import { publicIpv4 } from 'public-ip'
 import { multiaddr } from '@multiformats/multiaddr'
 import { webRTC } from '@libp2p/webrtc'
 
@@ -46,7 +46,7 @@ class IpfsAdapter {
     this.config = config
     this.fs = fs
     this.createLibp2p = createLibp2p
-    this.publicIp = publicIp
+    this.publicIp = publicIpv4
     this.multiaddr = multiaddr
 
     // Properties of this class instance.
@@ -73,7 +73,7 @@ class IpfsAdapter {
       console.log('IPFS ID: ', this.id)
 
       // Attempt to guess our ip4 IP address.
-      const ip4 = await this.publicIp.v4()
+      const ip4 = await this.publicIp()
       let detectedMultiaddr = `/ip4/${ip4}/tcp/${this.config.ipfsTcpPort}/p2p/${this.id}`
       detectedMultiaddr = this.multiaddr(detectedMultiaddr)
 
