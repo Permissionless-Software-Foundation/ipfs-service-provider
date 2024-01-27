@@ -159,7 +159,10 @@ class IpfsAdapter {
         transports: [
           tcp(),
           webSockets(),
-          circuitRelayTransport({ discoverRelays: 3 }),
+          circuitRelayTransport({
+            discoverRelays: 3,
+            reservationConcurrency: 3
+          }),
           webRTC()
         ],
         connectionEncryption: [
