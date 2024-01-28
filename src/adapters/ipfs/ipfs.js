@@ -214,7 +214,7 @@ class IpfsAdapter {
 
   // This function opens the seed used to generate the key for this IPFS peer.
   // The seed is stored in a JSON file. If it doesn't exist, a new one is created.
-  async getSeed() {
+  async getSeed () {
     try {
       let seed
 
@@ -223,7 +223,7 @@ class IpfsAdapter {
       try {
         // Try to read the JSON file containing the seed.
         seed = await this.jsonFiles.readJSON(filename)
-      } catch(err) {
+      } catch (err) {
         const seedNum = Math.floor(Math.random() * 1000000000000000000000)
         seed = seedNum.toString()
 
@@ -234,7 +234,7 @@ class IpfsAdapter {
       // console.log('getSeed() seed: ', seed)
 
       return seed
-    } catch(err) {
+    } catch (err) {
       console.error('Error in getSeed()')
       throw err
     }
