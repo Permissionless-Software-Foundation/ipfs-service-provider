@@ -28,7 +28,7 @@ import { multiaddr } from '@multiformats/multiaddr'
 import { webRTC } from '@libp2p/webrtc'
 import { keychain } from '@libp2p/keychain'
 import { defaultLogger } from '@libp2p/logger'
-import {Key} from 'interface-datastore/key'
+import { Key } from 'interface-datastore/key'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -130,7 +130,7 @@ class IpfsAdapter {
         // await chain.createKey('myKey', 'RSA', 4096)
         peerId = await chain.exportPeerId('myKey')
       }
-      console.log(`Created peer ID: `, peerId)
+      console.log('Created peer ID: ', peerId)
 
       // Configure services
       const services = {
