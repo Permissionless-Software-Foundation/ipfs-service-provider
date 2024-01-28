@@ -31,6 +31,7 @@ import { defaultLogger } from '@libp2p/logger'
 
 // Local libraries
 import config from '../../../config/index.js'
+import JsonFiles from '../json-files.js'
 
 // Hack to get __dirname back.
 // https://blog.logrocket.com/alternatives-dirname-node-js-es-modules/
@@ -49,6 +50,7 @@ class IpfsAdapter {
     this.createLibp2p = createLibp2p
     this.publicIp = publicIp
     this.multiaddr = multiaddr
+    this.jsonFiles = new JsonFiles()
 
     // Properties of this class instance.
     this.isReady = false
@@ -58,6 +60,7 @@ class IpfsAdapter {
     this.createNode = this.createNode.bind(this)
     this.stop = this.stop.bind(this)
     this.ensureBlocksDir = this.ensureBlocksDir.bind(this)
+    this.getSeed = this.getSeed.bind(this)
   }
 
   // Start an IPFS node.
@@ -112,8 +115,9 @@ class IpfsAdapter {
       const datastore = new FsDatastore(`${IPFS_DIR}/datastore`)
 
       // TODO: Replace this with a random string generator.
+      // const keychainInit = await this.getSeed()
       const keychainInit = {
-        pass: 'very long, very secure password'
+        pass: await this.getSeed()
       }
 
       // Create an identity
@@ -204,6 +208,34 @@ class IpfsAdapter {
       return true
     } catch (err) {
       console.error('Error in adapters/ipfs.js/ensureBlocksDir(): ', err)
+      throw err
+    }
+  }
+
+  // This function opens the seed used to generate the key for this IPFS peer.
+  // The seed is stored in a JSON file. If it doesn't exist, a new one is created.
+  async getSeed() {
+    try {
+      let seed
+
+      const filename = `${IPFS_DIR}/seed.json`
+
+      try {
+        // Try to read the JSON file containing the seed.
+        seed = await this.jsonFiles.readJSON(filename)
+      } catch(err) {
+        const seedNum = Math.floor(Math.random() * 1000000000000000000000)
+        seed = seedNum.toString()
+
+        // Save the newly generated seed
+        await this.jsonFiles.writeJSON(seed, filename)
+      }
+
+      // console.log('getSeed() seed: ', seed)
+
+      return seed
+    } catch(err) {
+      console.error('Error in getSeed()')
       throw err
     }
   }
