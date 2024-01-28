@@ -26,8 +26,9 @@ import { webSockets } from '@libp2p/websockets'
 import publicIp from 'public-ip'
 import { multiaddr } from '@multiformats/multiaddr'
 import { webRTC } from '@libp2p/webrtc'
-// import { keychain } from '@libp2p/keychain'
-// import { defaultLogger } from '@libp2p/logger'
+import { keychain } from '@libp2p/keychain'
+import { defaultLogger } from '@libp2p/logger'
+import {Key} from 'interface-datastore/key'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -41,9 +42,9 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 const ROOT_DIR = `${__dirname}../../../`
 const IPFS_DIR = `${__dirname}../../../.ipfsdata/ipfs`
 
-// const keychainInit = {
-//   pass: 'very long, very secure password'
-// }
+const keychainInit = {
+  pass: 'very long, very secure password'
+}
 
 class IpfsAdapter {
   constructor (localConfig) {
@@ -116,16 +117,20 @@ class IpfsAdapter {
       const datastore = new FsDatastore(`${IPFS_DIR}/datastore`)
 
       // Create an identity
-      // let peerId
-      // const chain = keychain(keychainInit)({
-      //   datastore,
-      //   logger: defaultLogger()
-      // })
-      // const selfKey = new Key('/pkcs8/self')
-      // if (await datastore.has(selfKey)) {
-      //   // load the peer id from the keychain
-      //   peerId = await chain.exportPeerId('self')
-      // }
+      let peerId
+      const chain = keychain(keychainInit)({
+        datastore,
+        logger: defaultLogger()
+      })
+      const selfKey = new Key('/pkcs8/self')
+      if (await datastore.has(selfKey)) {
+        // load the peer id from the keychain
+        peerId = await chain.exportPeerId('self')
+      } else {
+        // await chain.createKey('myKey', 'RSA', 4096)
+        peerId = await chain.exportPeerId('myKey')
+      }
+      console.log(`Created peer ID: `, peerId)
 
       // Configure services
       const services = {
@@ -164,7 +169,7 @@ class IpfsAdapter {
 
       // libp2p is the networking layer that underpins Helia
       const libp2p = await this.createLibp2p({
-        // peerId,
+        peerId,
         datastore,
         addresses: {
           listen: [
@@ -194,10 +199,12 @@ class IpfsAdapter {
         services
       })
 
-      // console.log(`Node started with id ${libp2p.peerId.toString()}`)
-      // console.log('Listening on:')
-      // libp2p.getMultiaddrs().forEach((ma) => console.log(ma.toString()))
-
+      // Save the identity if it was newly created.
+      if (peerId != null && !await datastore.has(selfKey)) {
+        console.log(`Saving key for peer ID ${libp2p.peerId}`)
+        // a new PeerId would have been generated so store it in the keychain for next time
+        await chain.importPeer('self', libp2p.peerId)
+      }
       // create a Helia node
       const helia = await createHelia({
         blockstore,
