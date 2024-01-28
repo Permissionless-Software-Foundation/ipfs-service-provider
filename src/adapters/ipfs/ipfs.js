@@ -41,10 +41,6 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 const ROOT_DIR = `${__dirname}../../../`
 const IPFS_DIR = `${__dirname}../../../.ipfsdata/ipfs`
 
-const keychainInit = {
-  pass: 'very long, very secure password'
-}
-
 class IpfsAdapter {
   constructor (localConfig) {
     // Encapsulate dependencies
@@ -114,6 +110,11 @@ class IpfsAdapter {
       // Create block and data stores.
       const blockstore = new FsBlockstore(`${IPFS_DIR}/blockstore`)
       const datastore = new FsDatastore(`${IPFS_DIR}/datastore`)
+
+      // TODO: Replace this with a random string generator.
+      const keychainInit = {
+        pass: 'very long, very secure password'
+      }
 
       // Create an identity
       let peerId
