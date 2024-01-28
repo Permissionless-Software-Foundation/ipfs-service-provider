@@ -10,7 +10,7 @@ import IpfsCoord from 'helia-coord'
 
 // import BCHJS from '@psf/bch-js';
 import SlpWallet from 'minimal-slp-wallet'
-import publicIp from 'public-ip'
+import { publicIpv4 } from 'public-ip'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -35,7 +35,7 @@ class IpfsCoordAdapter {
     // this.bchjs = new BCHJS()
     this.wallet = new SlpWallet()
     this.config = config
-    this.publicIp = publicIp
+    this.publicIp = publicIpv4
 
     // Properties of this class instance.
     this.isReady = false
@@ -52,7 +52,7 @@ class IpfsCoordAdapter {
     // If configured as a Circuit Relay, get the public IP addresses for this node.
     if (this.config.isCircuitRelay) {
       try {
-        const ip4 = await this.publicIp.v4()
+        const ip4 = await this.publicIp()
         // const ip6 = await publicIp.v6()
 
         circuitRelayInfo.ip4 = ip4
@@ -113,9 +113,12 @@ class IpfsCoordAdapter {
 
   // Subscribe to the chat pubsub channel
   async subscribeToChat () {
+    // TODO: Allow user to replace nullog with their own log handler at startup.
+    const nullLog = () => {}
+
     await this.ipfsCoord.adapters.pubsub.subscribeToPubsubChannel(
       this.config.chatPubSubChan,
-      console.log,
+      nullLog,
       this.ipfsCoord.thisNode
     )
   }

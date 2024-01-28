@@ -52,7 +52,7 @@ describe('#IPFS', () => {
     it('should get the public IP address if this node is a Circuit Relay', async () => {
       // Mock dependencies.
       uut.IpfsCoord = IPFSCoordMock
-      sandbox.stub(uut.publicIp, 'v4').resolves('123')
+      sandbox.stub(uut, 'publicIp').resolves('123')
 
       // Force Circuit Relay
       uut.config.isCircuitRelay = true
@@ -66,7 +66,7 @@ describe('#IPFS', () => {
     it('should exit quietly if this node is a Circuit Relay and there is an issue getting the IP address', async () => {
       // Mock dependencies.
       uut.IpfsCoord = IPFSCoordMock
-      sandbox.stub(uut.publicIp, 'v4').rejects(new Error('test error'))
+      sandbox.stub(uut, 'publicIp').rejects(new Error('test error'))
 
       // Force Circuit Relay
       uut.config.isCircuitRelay = true

@@ -53,7 +53,7 @@ describe('#IPFS-adapter', () => {
     it('should return a promise that resolves into an instance of IPFS.', async () => {
       // Mock dependencies.
       sandbox.stub(uut, 'createNode').resolves(ipfs)
-      sandbox.stub(uut.publicIp, 'v4').resolves('192.168.2.4')
+      sandbox.stub(uut, 'publicIp').resolves('192.168.2.4')
       sandbox.stub(uut, 'multiaddr').returns('/ip4/fake-multiaddr')
 
       const result = await uut.start()

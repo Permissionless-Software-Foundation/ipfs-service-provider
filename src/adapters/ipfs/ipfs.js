@@ -18,12 +18,13 @@ import { tcp } from '@libp2p/tcp'
 import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 // import { bootstrap } from '@libp2p/bootstrap'
+// import { identifyService } from 'libp2p/identify'
 import { identify } from '@libp2p/identify'
 // import { circuitRelayServer, circuitRelayTransport } from 'libp2p/circuit-relay'
 import { circuitRelayServer, circuitRelayTransport } from '@libp2p/circuit-relay-v2'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { webSockets } from '@libp2p/websockets'
-import publicIp from 'public-ip'
+import { publicIpv4 } from 'public-ip'
 import { multiaddr } from '@multiformats/multiaddr'
 import { webRTC } from '@libp2p/webrtc'
 import { keychain } from '@libp2p/keychain'
@@ -48,7 +49,7 @@ class IpfsAdapter {
     this.config = config
     this.fs = fs
     this.createLibp2p = createLibp2p
-    this.publicIp = publicIp
+    this.publicIp = publicIpv4
     this.multiaddr = multiaddr
     this.jsonFiles = new JsonFiles()
 
@@ -77,7 +78,7 @@ class IpfsAdapter {
       console.log('IPFS ID: ', this.id)
 
       // Attempt to guess our ip4 IP address.
-      const ip4 = await this.publicIp.v4()
+      const ip4 = await this.publicIp()
       let detectedMultiaddr = `/ip4/${ip4}/tcp/${this.config.ipfsTcpPort}/p2p/${this.id}`
       detectedMultiaddr = this.multiaddr(detectedMultiaddr)
 
@@ -140,7 +141,19 @@ class IpfsAdapter {
       }
       if (this.config.isCircuitRelay) {
         console.log('Helia (IPFS) node IS configured as Circuit Relay')
-        services.relay = circuitRelayServer()
+        services.relay = circuitRelayServer({ // makes the node function as a relay server
+          hopTimeout: 30 * 1000, // incoming relay requests must be resolved within this time limit
+          advertise: true,
+          reservations: {
+            maxReservations: 15, // how many peers are allowed to reserve relay slots on this server
+            reservationClearInterval: 300 * 1000, // how often to reclaim stale reservations
+            applyDefaultLimit: true, // whether to apply default data/duration limits to each relayed connection
+            defaultDurationLimit: 2 * 60 * 1000, // the default maximum amount of time a relayed connection can be open for
+            defaultDataLimit: BigInt(2 << 7), // the default maximum number of bytes that can be transferred over a relayed connection
+            maxInboundHopStreams: 32, // how many inbound HOP streams are allow simultaneously
+            maxOutboundHopStreams: 64 // how many outbound HOP streams are allow simultaneously
+          }
+        })
       } else {
         console.log('Helia (IPFS) node IS NOT configured as Circuit Relay')
       }
@@ -160,7 +173,10 @@ class IpfsAdapter {
         transports: [
           tcp(),
           webSockets(),
-          circuitRelayTransport({ discoverRelays: 3 }),
+          circuitRelayTransport({
+            discoverRelays: 3,
+            reservationConcurrency: 3
+          }),
           webRTC()
         ],
         connectionEncryption: [
