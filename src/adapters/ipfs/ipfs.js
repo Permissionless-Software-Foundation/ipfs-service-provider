@@ -28,7 +28,6 @@ import { multiaddr } from '@multiformats/multiaddr'
 import { webRTC } from '@libp2p/webrtc'
 import { keychain } from '@libp2p/keychain'
 import { defaultLogger } from '@libp2p/logger'
-import { Key } from 'interface-datastore/key'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -122,15 +121,12 @@ class IpfsAdapter {
         datastore,
         logger: defaultLogger()
       })
-      const selfKey = new Key('/pkcs8/self')
-      if (await datastore.has(selfKey)) {
-        // load the peer id from the keychain
-        peerId = await chain.exportPeerId('self')
-      } else {
-        // await chain.createKey('myKey', 'RSA', 4096)
+      try {
+        peerId = await chain.exportPeerId('myKey')
+      } catch (err) {
+        await chain.createKey('myKey', 'RSA', 4096)
         peerId = await chain.exportPeerId('myKey')
       }
-      console.log('Created peer ID: ', peerId)
 
       // Configure services
       const services = {
@@ -143,29 +139,6 @@ class IpfsAdapter {
       } else {
         console.log('Helia (IPFS) node IS NOT configured as Circuit Relay')
       }
-
-      // const bootstrapList = [
-      //   //
-      //   // // launchpad-p2wdb-service (Launchpad pinning service)
-      //   // '/ip4/137.184.13.92/tcp/4001/p2p/12D3KooWPpBXhhAeoCZCGuQ3KR4xwHzzvtP57f6zLmo8P7ZFBJFE',
-      //   //
-      //   // // PSFoundation.info metrics
-      //   // '/ip4/5.161.72.148/tcp/4001/p2p/12D3KooWDL1kPixc6hcT4s7teWGufrxXmZFD1kPeGdDrsKgYrFUt',
-      //   //
-      //   // // PSFoundation.info P2WDB
-      //   // '/ip4/5.161.72.148/tcp/4101/p2p/12D3KooWHz1sRB94EEVRQRJvUX9MyRm3xhr4QSyCoJbTdu2AYheq',
-      //   //
-      //   // // TokenTiger.com backup P2WDB
-      //   // '/ip4/161.35.99.207/tcp/4001/p2p/12D3KooWDtj9cfj1SKuLbDNKvKRKSsGN8qivq9M8CYpLPDpcD5pu',
-      //   //
-      //   // // helia-p2wdb-dev-server-01 prototype P2WDB server using Helia (Token Tiger)
-      //   // '/ip4/137.184.93.145/tcp/4001/p2p/12D3KooWGZCpD5Ue3CJCBBEKowcuKEgeVKbTM7VMbJ8xm1bqST1j',
-      //   //
-      //   // // helia-p2wdb-dev-server-01 prototype P2WDB server using Helia (FullStack.cash)
-      //   // '/ip4/78.46.129.7/tcp/7001/p2p/12D3KooWRqe7TwTj8apPxmpPqPgHiv7qv5YBJTo1VeQ7zrdyA2HN'
-      // ]
-      // bootstrapList = bootstrapList.concat(this.config.bootstrapRelays)
-      // console.log('bootstrapList: ', bootstrapList)
 
       // libp2p is the networking layer that underpins Helia
       const libp2p = await this.createLibp2p({
@@ -191,20 +164,9 @@ class IpfsAdapter {
         streamMuxers: [
           yamux()
         ],
-        // peerDiscovery: [
-        //   bootstrap({
-        //     list: bootstrapList
-        //   })
-        // ],
         services
       })
 
-      // Save the identity if it was newly created.
-      if (peerId != null && !await datastore.has(selfKey)) {
-        console.log(`Saving key for peer ID ${libp2p.peerId}`)
-        // a new PeerId would have been generated so store it in the keychain for next time
-        await chain.importPeer('self', libp2p.peerId)
-      }
       // create a Helia node
       const helia = await createHelia({
         blockstore,
