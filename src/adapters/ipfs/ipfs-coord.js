@@ -113,9 +113,12 @@ class IpfsCoordAdapter {
 
   // Subscribe to the chat pubsub channel
   async subscribeToChat () {
+    // TODO: Allow user to replace nullog with their own log handler at startup.
+    const nullLog = () => {}
+
     await this.ipfsCoord.adapters.pubsub.subscribeToPubsubChannel(
       this.config.chatPubSubChan,
-      console.log,
+      nullLog,
       this.ipfsCoord.thisNode
     )
   }
