@@ -14,8 +14,8 @@ services:
     restart: always
 
   ipfs-service:
-    #build: .
-    image: christroutner/ipfs-service-provider:v5.0.1
+    build: .
+    #image: christroutner/ipfs-service-provider:v5.0.1
     container_name: ipfs-service
     logging:
       driver: 'json-file'
@@ -27,6 +27,8 @@ services:
       - mongo-ipfs-service
     ports:
       - '5010:5010' # <host port>:<container port>
+      - '4001:4001'
+      - '4003:4003'
     volumes:
       - ../data/ipfsdata:/home/safeuser/ipfs-service-provider/.ipfsdata
       - ./start-production.sh:/home/safeuser/ipfs-service-provider/start-production.sh
