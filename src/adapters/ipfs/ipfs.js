@@ -130,7 +130,7 @@ class IpfsAdapter {
       try {
         peerId = await chain.exportPeerId('myKey')
       } catch (err) {
-        await chain.createKey('myKey', 'RSA', 4096)
+        await chain.createKey('myKey', 'Ed25519', 4096)
         peerId = await chain.exportPeerId('myKey')
       }
 
