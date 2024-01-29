@@ -1,6 +1,11 @@
 /*
   This file is used to store unsecure, application-specific data common to all
   environments.
+
+  Additional Environent Variables:
+  - CONNECT_PREF: should have a value of 'cr' (default), or 'direct'. This is
+    used by helia-coord to select a connection preference between peers. Servers
+    with an ip4 or ip6 address should use 'direct'.
 */
 
 /* eslint  no-unneeded-ternary:0 */
