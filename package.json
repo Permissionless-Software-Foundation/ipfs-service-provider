@@ -33,6 +33,7 @@
     "@libp2p/keychain": "4.0.7",
     "@libp2p/logger": "4.0.5",
     "@libp2p/tcp": "9.0.7",
+    "@libp2p/webrtc": "3.2.11",
     "axios": "0.27.2",
     "bcryptjs": "2.4.3",
     "blockstore-fs": "1.1.8",
