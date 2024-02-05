@@ -124,13 +124,13 @@ class IpfsRESTControllerLib {
     }
   }
 
-  async downloadFile(ctx) {
+  async downloadFile (ctx) {
     try {
-      const {cid} = ctx.params
+      const { cid } = ctx.params
 
       const file = await this.adapters.ipfs.ipfs.blockstore.get(cid)
       return file
-    } catch(err) {
+    } catch (err) {
       wlogger.error('Error in ipfs/controller.js/downloadFile(): ', err)
       this.handleError(ctx, err)
     }
