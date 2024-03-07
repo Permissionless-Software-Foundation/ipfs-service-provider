@@ -52,6 +52,8 @@ class IpfsAdapter {
     this.publicIp = publicIpv4
     this.multiaddr = multiaddr
     this.jsonFiles = new JsonFiles()
+    this.keychain = keychain
+    this.createHelia = createHelia
 
     // Properties of this class instance.
     this.isReady = false
@@ -62,6 +64,7 @@ class IpfsAdapter {
     this.stop = this.stop.bind(this)
     this.ensureBlocksDir = this.ensureBlocksDir.bind(this)
     this.getSeed = this.getSeed.bind(this)
+    this.getKeychain = this.getKeychain.bind(this)
   }
 
   // Start an IPFS node.
@@ -107,6 +110,19 @@ class IpfsAdapter {
     }
   }
 
+  async getKeychain (datastore) {
+    const keychainInit = {
+      pass: await this.getSeed()
+    }
+
+    const chain = this.keychain(keychainInit)({
+      datastore,
+      logger: defaultLogger()
+    })
+
+    return chain
+  }
+
   // This function creates an IPFS node using Helia.
   // It returns the node as an object.
   async createNode () {
@@ -115,18 +131,18 @@ class IpfsAdapter {
       const blockstore = new FsBlockstore(`${IPFS_DIR}/blockstore`)
       const datastore = new FsDatastore(`${IPFS_DIR}/datastore`)
 
-      // TODO: Replace this with a random string generator.
-      // const keychainInit = await this.getSeed()
-      const keychainInit = {
-        pass: await this.getSeed()
-      }
+      // const keychainInit = {
+      //   pass: await this.getSeed()
+      // }
 
       // Create an identity
       let peerId
-      const chain = keychain(keychainInit)({
-        datastore,
-        logger: defaultLogger()
-      })
+      // console.log('this.keychain: ', this.keychain)
+      // const chain = this.keychain(keychainInit)({
+      //   datastore,
+      //   logger: defaultLogger()
+      // })
+      const chain = await this.getKeychain(datastore)
       try {
         peerId = await chain.exportPeerId('myKey')
       } catch (err) {
@@ -201,7 +217,7 @@ class IpfsAdapter {
       })
 
       // create a Helia node
-      const helia = await createHelia({
+      const helia = await this.createHelia({
         blockstore,
         datastore,
         libp2p
@@ -263,7 +279,7 @@ class IpfsAdapter {
 
       return seed
     } catch (err) {
-      console.error('Error in getSeed()')
+      console.error('Error in adapters/ipfs/ipfs.js/getSeed()')
       throw err
     }
   }
