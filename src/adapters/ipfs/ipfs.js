@@ -29,6 +29,7 @@ import { multiaddr } from '@multiformats/multiaddr'
 import { webRTC } from '@libp2p/webrtc'
 import { keychain } from '@libp2p/keychain'
 import { defaultLogger } from '@libp2p/logger'
+import { unixfs } from '@helia/unixfs'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -222,6 +223,10 @@ class IpfsAdapter {
         datastore,
         libp2p
       })
+
+      // Attach IPFS file system.
+      const fs = unixfs(helia)
+      helia.fs = fs
 
       return helia
     } catch (err) {
