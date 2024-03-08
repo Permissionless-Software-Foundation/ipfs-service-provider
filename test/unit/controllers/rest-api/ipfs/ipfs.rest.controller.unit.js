@@ -211,4 +211,41 @@ describe('#IPFS REST API', () => {
       }
     })
   })
+
+  describe('#getThisNode', () => {
+    it('should return 422 status on biz logic error', async () => {
+      try {
+        // Force an error
+        // sandbox.stub(uut.adapters.ipfs.ipfsCoordAdapter.ipfsCoord, 'thisNode').rejects(new Error('test error'))
+        uut.adapters.ipfs.ipfsCoordAdapter = {}
+
+        ctx.request.body = {}
+
+        await uut.getThisNode(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'Cannot read')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      // Mock dependencies
+      // sandbox.stub(uut.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.adapters.ipfs, 'connectToPeer').resolves({ success: true })
+
+      uut.adapters.ipfs.ipfsCoordAdapter = {
+        ipfsCoord: {
+          thisNode: {}
+        }
+      }
+
+      ctx.request.body = {}
+
+      await uut.getThisNode(ctx)
+
+      assert.property(ctx.body, 'thisNode')
+    })
+  })
 })

@@ -113,7 +113,6 @@ class IpfsRESTControllerLib {
    */
   async getThisNode (ctx) {
     try {
-      // const status = await this.adapters.ipfs.getStatus()
       const thisNode = this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
 
       ctx.body = { thisNode }
