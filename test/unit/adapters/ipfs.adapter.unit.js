@@ -6,6 +6,7 @@
 import { assert } from 'chai'
 import sinon from 'sinon'
 import cloneDeep from 'lodash.clonedeep'
+import { peerIdFromString } from '@libp2p/peer-id'
 
 // Local libraries
 import IPFSLib from '../../../src/adapters/ipfs/ipfs.js'
@@ -158,6 +159,84 @@ describe('#IPFS-adapter', () => {
 
       // Stop the IPFS node
       await result.stop()
+    })
+
+    it('should create a new private key on first run', async () => {
+      uut.config.isCircuitRelay = false
+
+      // Mock dependencies and force desired code path.
+      let beenCalled = false
+      sandbox.stub(uut, 'getKeychain').resolves({
+        exportPeerId: async () => {
+          if (!beenCalled) {
+            beenCalled = true
+            throw new Error('test error')
+          }
+          return peerIdFromString('12D3KooWSXF1PnEfiA8bCG8SJduCvzdwHtvhVPK4WC6zzDoto2XP')
+        },
+        createKey: async () => {}
+      })
+      sandbox.stub(uut, 'createLibp2p').resolves()
+      sandbox.stub(uut, 'createHelia').resolves({})
+
+      const result = await uut.createNode()
+      // console.log('result: ', result)
+
+      assert.property(result, 'fs')
+    })
+
+    it('should not use circuit relay when CONNECT_PREF is set to direct', async () => {
+      process.env.CONNECT_PREF = 'direct'
+
+      uut.config.isCircuitRelay = false
+      const result = await uut.createNode()
+      // console.log('result: ', result)
+
+      delete process.env.CONNECT_PREF
+
+      // Assert the returned IPFS node has expected properties
+      assert.property(result, 'libp2p')
+      assert.property(result, 'blockstore')
+
+      // Stop the IPFS node
+      await result.stop()
+    })
+  })
+
+  describe('#getSeed', () => {
+    it('should read the seed from the JSON file', async () => {
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.jsonFiles, 'readJSON').resolves('12345678')
+
+      const result = await uut.getSeed()
+      // console.log('result: ', result)
+
+      assert.isString(result)
+    })
+
+    it('should generate a new seed if the JSON file is not found', async () => {
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.jsonFiles, 'readJSON').rejects(new Error('test error'))
+      sandbox.stub(uut.jsonFiles, 'writeJSON').resolves()
+
+      const result = await uut.getSeed()
+      // console.log('result: ', result)
+
+      assert.isString(result)
+    })
+
+    it('should catch, report, and throw errors', async () => {
+      try {
+        // Force an error
+        sandbox.stub(uut.jsonFiles, 'readJSON').rejects(new Error('test error'))
+        sandbox.stub(uut.jsonFiles, 'writeJSON').rejects(new Error('test error'))
+
+        await uut.getSeed()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'test error')
+      }
     })
   })
 })

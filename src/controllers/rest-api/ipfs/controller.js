@@ -2,6 +2,9 @@
   REST API Controller library for the /ipfs route
 */
 
+// Global npm libraries
+
+// Local libraries
 import wlogger from '../../../adapters/wlogger.js'
 
 class IpfsRESTControllerLib {
@@ -31,7 +34,6 @@ class IpfsRESTControllerLib {
     this.handleError = this.handleError.bind(this)
     this.connect = this.connect.bind(this)
     this.getThisNode = this.getThisNode.bind(this)
-    this.downloadFile = this.downloadFile.bind(this)
   }
 
   /**
@@ -113,25 +115,12 @@ class IpfsRESTControllerLib {
    */
   async getThisNode (ctx) {
     try {
-      // const status = await this.adapters.ipfs.getStatus()
       const thisNode = this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
 
       ctx.body = { thisNode }
     } catch (err) {
       wlogger.error('Error in ipfs/controller.js/getThisNode(): ')
       // ctx.throw(422, err.message)
-      this.handleError(ctx, err)
-    }
-  }
-
-  async downloadFile (ctx) {
-    try {
-      const { cid } = ctx.params
-
-      const file = await this.adapters.ipfs.ipfs.blockstore.get(cid)
-      return file
-    } catch (err) {
-      wlogger.error('Error in ipfs/controller.js/downloadFile(): ', err)
       this.handleError(ctx, err)
     }
   }
