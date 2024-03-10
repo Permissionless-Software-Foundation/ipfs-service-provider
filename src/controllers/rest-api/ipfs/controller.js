@@ -3,8 +3,6 @@
 */
 
 // Global npm libraries
-import { exporter } from 'ipfs-unixfs-exporter'
-import fs from 'fs'
 
 // Local libraries
 import wlogger from '../../../adapters/wlogger.js'
@@ -28,7 +26,6 @@ class IpfsRESTControllerLib {
     // Encapsulate dependencies
     // this.UserModel = this.adapters.localdb.Users
     // this.userUseCases = this.useCases.user
-    this.fs = fs
 
     // Bind 'this' object to all subfunctions
     this.getStatus = this.getStatus.bind(this)
@@ -37,7 +34,6 @@ class IpfsRESTControllerLib {
     this.handleError = this.handleError.bind(this)
     this.connect = this.connect.bind(this)
     this.getThisNode = this.getThisNode.bind(this)
-    this.downloadFile = this.downloadFile.bind(this)
   }
 
   /**
@@ -125,77 +121,6 @@ class IpfsRESTControllerLib {
     } catch (err) {
       wlogger.error('Error in ipfs/controller.js/getThisNode(): ')
       // ctx.throw(422, err.message)
-      this.handleError(ctx, err)
-    }
-  }
-
-  async downloadFile (ctx) {
-    try {
-      // const { cid } = ctx.params
-
-      // const multiaddr = ctx.request.body.multiaddr
-      // const getDetails = ctx.request.body.getDetails
-      const { cid, fileName, path } = ctx.request.body
-
-      console.log(`downloadFile() retrieving this CID: ${cid}, with fileName: ${fileName}, and path: ${path}`)
-
-      // const file = await this.adapters.ipfs.ipfs.blockstore.get(cid)
-      // console.log('file: ', file)
-      // return file
-
-      // const ipfsFs = this.adapters.ipfs.ipfs.fs
-      // console.log('ipfsFs: ', ipfsFs)
-      //
-      // const buf = []
-      // for await (const chunk of ipfsFs.cat(cid)) {
-      //   // text += decoder.decode(chunk, {
-      //   //   stream: true
-      //   // })
-      //
-      //   buf.push(chunk)
-      // }
-      // console.log(`buf: `, buf)
-
-      const blockstore = this.adapters.ipfs.ipfs.blockstore
-      const entry = await exporter(cid, blockstore)
-
-      console.info(entry.cid) // Qmqux
-      console.info(entry.path) // Qmbaz/foo/bar.txt
-      console.info(entry.name) // bar.txt
-      console.log('entry: ', entry)
-      // console.info(entry.unixfs.fileSize()) // 4
-
-      // stream content from unixfs node
-      // const bytes = new Uint8Array(Number(entry.size))
-      // let offset = 0
-
-      const filePath = `${path}/${fileName}`
-      const writableStream = fs.createWriteStream(filePath)
-
-      writableStream.on('error', (error) => {
-        console.log(`An error occured while writing to the file. Error: ${error.message}`)
-      })
-
-      writableStream.on('finish', () => {
-        console.log(`CID ${cid} downloaded to ${filePath}`)
-      })
-
-      for await (const buf of entry.content()) {
-        // bytes.set(buf, offset)
-        // offset += buf.length
-
-        writableStream.write(buf)
-      }
-
-      writableStream.end()
-
-      // console.info(bytes) // 0, 1, 2, 3
-
-      ctx.body = {
-        success: true
-      }
-    } catch (err) {
-      wlogger.error('Error in ipfs/controller.js/downloadFile(): ', err)
       this.handleError(ctx, err)
     }
   }

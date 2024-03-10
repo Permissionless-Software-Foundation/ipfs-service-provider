@@ -177,12 +177,12 @@ describe('#IPFS-adapter', () => {
         createKey: async () => {}
       })
       sandbox.stub(uut, 'createLibp2p').resolves()
-      sandbox.stub(uut, 'createHelia').resolves(true)
+      sandbox.stub(uut, 'createHelia').resolves({})
 
       const result = await uut.createNode()
       // console.log('result: ', result)
 
-      assert.equal(result, true)
+      assert.property(result, 'fs')
     })
 
     it('should not use circuit relay when CONNECT_PREF is set to direct', async () => {
