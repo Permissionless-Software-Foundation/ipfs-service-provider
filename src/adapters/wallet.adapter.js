@@ -122,6 +122,113 @@ class Wallet {
       throw err
     }
   }
+
+  // Create an instance of minimal-slp-wallet. Same as
+  // instanceWalletWithoutInitialization(), but waits for the wallet to initialize
+  // its UTXOs (wallet balance and tokens).
+  async instanceWallet (walletData = {}, advancedConfig = {}) {
+    try {
+      // Instance the wallet without initialization.
+      await this.instanceWalletWithoutInitialization(walletData, advancedConfig)
+
+      // Initialize the wallet
+      await this.bchWallet.initialize()
+
+      return this.bchWallet
+    } catch (err) {
+      console.error('Error in wallet.js/instanceWallet()')
+      throw err
+    }
+  }
+
+  // Increments the 'nextAddress' property in the wallet file. This property
+  // indicates the HD index that should be used to generate a key pair for
+  // storing funds for Offers.
+  // This function opens the wallet file, increments the nextAddress property,
+  // then saves the change to the wallet file.
+  async incrementNextAddress () {
+    try {
+      const walletData = await this.openWallet()
+      // console.log('original walletdata: ', walletData)
+      walletData.nextAddress++
+      // console.log('walletData finish: ', walletData)
+      await this.jsonFiles.writeJSON(walletData, this.WALLET_FILE)
+      // Update the working instance of the wallet.
+      this.bchWallet.walletInfo.nextAddress++
+      // console.log('this.bchWallet.walletInfo: ', this.bchWallet.walletInfo)
+      return walletData.nextAddress
+    } catch (err) {
+      console.error('Error in incrementNextAddress()')
+      throw err
+    }
+  }
+
+  // This method returns an object that contains a private key WIF, public address,
+  // and the index of the HD wallet that the key pair was generated from.
+  // TODO: Allow input integer. If input is used, use that as the index. If no
+  // input is provided, then call incrementNextAddress().
+  async getKeyPair (hdIndex = 0) {
+    try {
+      if (!hdIndex) {
+        // Increment the HD index and generate a new key pair.
+        hdIndex = await this.incrementNextAddress()
+      }
+      const mnemonic = this.bchWallet.walletInfo.mnemonic
+      // root seed buffer
+      const rootSeed = await this.bchWallet.bchjs.Mnemonic.toSeed(mnemonic)
+      const masterHDNode = this.bchWallet.bchjs.HDNode.fromSeed(rootSeed)
+      // HDNode of BIP44 account
+      // const account = this.bchWallet.bchjs.HDNode.derivePath(masterHDNode, "m/44'/245'/0'")
+      const childNode = masterHDNode.derivePath(`m/44'/245'/0'/0/${hdIndex}`)
+      const cashAddress = this.bchWallet.bchjs.HDNode.toCashAddress(childNode)
+      console.log('Generating a new key pair for cashAddress: ', cashAddress)
+      const wif = this.bchWallet.bchjs.HDNode.toWIF(childNode)
+      const outObj = {
+        cashAddress,
+        wif,
+        hdIndex
+      }
+      return outObj
+    } catch (err) {
+      console.error('Error in getKeyPair()')
+      throw err
+    }
+  }
+
+  // Optimize the wallet by consolidating the UTXOs.
+  async optimize () {
+    const UTXO_THREASHOLD = 7
+    // Do a dry-run first to see if there are enough UTXOs worth consolidating.
+    const dryRunOut = await this.bchWallet.optimize(true)
+    if (dryRunOut.bchUtxoCnt > UTXO_THREASHOLD) {
+      // Consolidate BCH UTXOs if the count is above the threashold.
+      const txids = await this.bchWallet.optimize()
+      console.log(`Wallet optimized with these return values: ${JSON.stringify(txids, null, 2)}`)
+    }
+    return true
+  }
+
+  // Get the balance of the wallet in sats and PSF tokens.
+  // This function is called by the GET /entry/balance controller.
+  async getBalance () {
+    const balance = await this.bchWallet.getBalance()
+    // console.log('balance: ', balance)
+    const tokens = await this.bchWallet.listTokens()
+    // console.log('tokens: ', tokens)
+    // Find the array entry for the PSF token
+    const psfTokens = tokens.find(x => x.tokenId === '38e97c5d7d3585a2cbf3f9580c82ca33985f9cb0845d4dcce220cb709f9538b0')
+    // console.log('psfTokens: ', psfTokens)
+    let psfBalance = 0
+    if (psfTokens) {
+      psfBalance = psfTokens.qty
+    }
+    const outObj = {
+      satBalance: balance,
+      psfBalance,
+      success: true
+    }
+    return outObj
+  }
 }
 
 export default Wallet

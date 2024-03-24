@@ -190,6 +190,147 @@ describe('#wallet', () => {
       assert.property(result, 'walletInfo')
     })
   })
+
+  describe('#instanceWallet', () => {
+    it('should create an instance of BchWallet', async () => {
+      // Create a mock wallet.
+      const mockWallet = new BchWallet()
+      await mockWallet.walletInfoPromise
+      sandbox.stub(mockWallet, 'initialize').resolves()
+
+      // Mock dependencies
+      sandbox.stub(uut, '_instanceWallet').resolves(mockWallet)
+
+      // Ensure we open the test file, not the production wallet file.
+      uut.WALLET_FILE = testWalletFile
+      const walletData = await uut.openWallet()
+      // console.log('walletData: ', walletData)
+      const result = await uut.instanceWallet(walletData)
+      // console.log('result: ', result)
+
+      assert.property(result, 'walletInfoPromise')
+      assert.property(result, 'walletInfo')
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        // Force an error
+        sandbox.stub(uut, 'instanceWalletWithoutInitialization').rejects(new Error('test error'))
+
+        await uut.instanceWallet()
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should create an instance of BchWallet using web2 infra', async () => {
+      // Create a mock wallet.
+      const mockWallet = new BchWallet()
+      await mockWallet.walletInfoPromise
+      sandbox.stub(mockWallet, 'initialize').resolves()
+
+      // Mock dependencies
+      sandbox.stub(uut, '_instanceWallet').resolves(mockWallet)
+
+      // Ensure we open the test file, not the production wallet file.
+      uut.WALLET_FILE = testWalletFile
+      const walletData = await uut.openWallet()
+      // console.log('walletData: ', walletData)
+
+      // Force desired code path
+      uut.config.useFullStackCash = true
+      const result = await uut.instanceWallet(walletData)
+      // console.log('result: ', result)
+
+      assert.property(result, 'walletInfoPromise')
+      assert.property(result, 'walletInfo')
+    })
+  })
+
+  describe('#incrementNextAddress', () => {
+    it('should increment the nextAddress property', async () => {
+      // Ensure we open the test file, not the production wallet file.
+      uut.WALLET_FILE = testWalletFile
+      // mock instance of minimal-slp-wallet
+      uut.bchWallet = new MockBchWallet()
+      const result = await uut.incrementNextAddress()
+      assert.equal(result, 2)
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        // Force an error
+        sandbox.stub(uut, 'openWallet').rejects(new Error('test error'))
+        await uut.incrementNextAddress()
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'test error')
+      }
+    })
+  })
+
+  describe('#getKeyPair', () => {
+    it('should return an object with a key pair', async () => {
+      // Ensure we open the test file, not the production wallet file.
+      uut.WALLET_FILE = testWalletFile
+      // mock instance of minimal-slp-wallet
+      uut.bchWallet = new MockBchWallet()
+      const result = await uut.getKeyPair()
+      // console.log('result: ', result)
+      assert.property(result, 'cashAddress')
+      assert.property(result, 'wif')
+      assert.property(result, 'hdIndex')
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut, 'incrementNextAddress')
+          .rejects(new Error('test error'))
+        await uut.getKeyPair()
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'test error')
+      }
+    })
+  })
+
+  describe('#optimize', () => {
+    it('should call the wallet optimize function', async () => {
+      // mock instance of minimal-slp-wallet
+      uut.bchWallet = new MockBchWallet()
+      sandbox.stub(uut.bchWallet, 'optimize').resolves({ bchUtxoCnt: 10 })
+      const result = await uut.optimize()
+      assert.equal(result, true)
+    })
+  })
+
+  describe('#getBalance', () => {
+    it('should get the balance for the wallet', async () => {
+      // mock instance of minimal-slp-wallet
+      uut.bchWallet = new MockBchWallet()
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.bchWallet, 'getBalance').resolves(41012)
+      sandbox.stub(uut.bchWallet, 'listTokens').resolves([{
+        tokenId: '38e97c5d7d3585a2cbf3f9580c82ca33985f9cb0845d4dcce220cb709f9538b0',
+        ticker: 'PSF',
+        name: 'Permissionless Software Foundation',
+        decimals: 8,
+        tokenType: 1,
+        url: 'psfoundation.cash',
+        qty: 2
+      }])
+      const result = await uut.getBalance()
+      // console.log('result: ', result)
+      // Assert the expected properties exist and have the expected values.
+      assert.equal(result.satBalance, 41012)
+      assert.equal(result.psfBalance, 2)
+      assert.equal(result.success, true)
+    })
+  })
 })
 
 const deleteFile = (filepath) => {
