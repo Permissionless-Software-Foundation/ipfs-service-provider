@@ -46,7 +46,7 @@ class Wallet {
       } else {
         // By default use the web3 Cash Stack (https://cashstack.info)
         advancedConfig.interface = 'consumer-api'
-        advancedConfig.restURL = this.config.consumerUrl
+        advancedConfig.restURL = this.config.apiServer
       }
 
       console.log('advancedConfig setting when creating wallet: ', advancedConfig)
@@ -83,8 +83,6 @@ class Wallet {
   async _instanceWallet (mnemonic, config) {
     const wallet = new this.BchWallet(mnemonic, config)
     await wallet.walletInfoPromise
-
-    console.log('_instanceWallet() wallet.bchjs.restURL: ', wallet.bchjs.restURL)
 
     return wallet
   }
