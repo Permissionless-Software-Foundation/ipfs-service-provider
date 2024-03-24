@@ -9,17 +9,15 @@ import BCHJS from '@psf/bch-js'
 
 // Load individual adapter libraries.
 import IPFSAdapter from './ipfs/index.js'
-
 import LocalDB from './localdb/index.js'
 import LogsAPI from './logapi.js'
 import Passport from './passport.js'
 import Nodemailer from './nodemailer.js'
-
 // const { wlogger } = require('./wlogger')
 import JSONFiles from './json-files.js'
-
 import FullStackJWT from './fullstack-jwt.js'
 import config from '../../config/index.js'
+import Wallet from './wallet.adapter.js'
 
 class Adapters {
   constructor (localConfig = {}) {
@@ -32,6 +30,7 @@ class Adapters {
     this.jsonFiles = new JSONFiles()
     this.bchjs = new BCHJS()
     this.config = config
+    this.wallet = new Wallet(localConfig)
 
     // Get a valid JWT API key and instance bch-js.
     this.fullStackJwt = new FullStackJWT(config)
@@ -39,13 +38,21 @@ class Adapters {
 
   async start () {
     try {
+      let apiToken
       if (this.config.getJwtAtStartup) {
         // Get a JWT token and instantiate bch-js with it. Then pass that instance
         // to all the rest of the apps controllers and adapters.
-        await this.fullStackJwt.getJWT()
+        apiToken = await this.fullStackJwt.getJWT()
         // Instantiate bch-js with the JWT token, and overwrite the placeholder for bch-js.
         this.bchjs = await this.fullStackJwt.instanceBchjs()
       }
+
+      // Create a default instance of minimal-slp-wallet without initializing it
+      // (without retrieving the wallets UTXOs). This instance will be overwritten
+      // if the operator has configured BCH payments.
+      console.log('\nCreating default startup wallet. This wallet may be overwritten.')
+      await this.wallet.instanceWalletWithoutInitialization({}, { apiToken })
+      this.bchjs = this.wallet.bchWallet.bchjs
 
       // Start the IPFS node.
       // Do not start these adapters if this is an e2e test.

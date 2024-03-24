@@ -78,6 +78,10 @@ npm install
 npm start
 ```
 
+### Configuration
+
+This app is intended to be started via a bash shell script. See the environment variables used to configure this app in the [config/env/common.js file](./config/env/common.js).
+
 ## File Structure
 
 The file layout of this repository follows the file layout of [Clean Architecture](https://christroutner.github.io/trouts-blog/blog/clean-architecture). Understaning the principles laid out this article will help developers navigate the code base.
