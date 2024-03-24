@@ -40,7 +40,7 @@ class Wallet {
       }
 
       // Detect and configure different blockchain infrastructure settings.
-      if (this.config.useFullStackCash) {
+      if (this.config.walletInterface === 'web2') {
         advancedConfig.interface = 'rest-api'
         advancedConfig.restURL = this.config.apiServer
       } else {
@@ -98,8 +98,8 @@ class Wallet {
 
       // Try to open the wallet.json file.
       try {
-        // console.log('this.WALLET_FILE: ', this.WALLET_FILE)
-        walletData = await this.jsonFiles.readJSON(this.WALLET_FILE)
+        // console.log('this.config.walletFile: ', this.config.walletFile)
+        walletData = await this.jsonFiles.readJSON(this.config.walletFile)
       } catch (err) {
         // Create a new wallet file if one does not already exist.
         console.log('Wallet file not found. Creating new wallet.json file.')
@@ -114,7 +114,7 @@ class Wallet {
         walletData.nextAddress = 1
 
         // Write the wallet data to the JSON file.
-        await this.jsonFiles.writeJSON(walletData, this.WALLET_FILE)
+        await this.jsonFiles.writeJSON(walletData, this.config.walletFile)
       }
 
       // console.log('walletData: ', walletData)

@@ -59,7 +59,7 @@ describe('#wallet', () => {
       // Mock dependencies
       uut.BchWallet = MockBchWallet
       // Ensure we open the test file, not the production wallet file.
-      uut.WALLET_FILE = testWalletFile
+      uut.walletFile = testWalletFile
       const result = await uut.openWallet()
       // console.log('result: ', result)
       assert.property(result, 'mnemonic')
@@ -75,7 +75,7 @@ describe('#wallet', () => {
     it('should open existing wallet file', async () => {
       // This test case uses the file created in the previous test case.
       // Ensure we open the test file, not the production wallet file.
-      uut.WALLET_FILE = testWalletFile
+      uut.walletFile = testWalletFile
       const result = await uut.openWallet()
       // console.log('result: ', result)
       assert.property(result, 'mnemonic')
@@ -91,7 +91,7 @@ describe('#wallet', () => {
     it('should catch and throw an error', async () => {
       try {
         // Force an error
-        uut.WALLET_FILE = ''
+        uut.config.walletFile = ''
         uut.BchWallet = () => {
         }
         await uut.openWallet()
@@ -116,7 +116,7 @@ describe('#wallet', () => {
       uut.config.authPass = 'fake-auth-pass'
 
       // Ensure we open the test file, not the production wallet file.
-      uut.WALLET_FILE = testWalletFile
+      uut.config.walletFile = testWalletFile
       const walletData = await uut.openWallet()
 
       // console.log('walletData: ', walletData)
@@ -146,15 +146,19 @@ describe('#wallet', () => {
       const mockWallet = new BchWallet()
       await mockWallet.walletInfoPromise
       sandbox.stub(mockWallet, 'initialize').resolves()
+
       // Mock dependencies
       sandbox.stub(uut, '_instanceWallet').resolves(mockWallet)
+
       // Ensure we open the test file, not the production wallet file.
-      uut.WALLET_FILE = testWalletFile
+      uut.config.walletFile = testWalletFile
       const walletData = await uut.openWallet()
       // console.log('walletData: ', walletData)
+
       // Force desired code path
-      uut.config.useFullStackCash = true
+      uut.config.walletInterface = 'web2'
       const result = await uut.instanceWalletWithoutInitialization(walletData)
+
       // console.log('result: ', result)
       assert.property(result, 'walletInfoPromise')
       assert.property(result, 'walletInfo')
@@ -170,7 +174,7 @@ describe('#wallet', () => {
       sandbox.stub(uut, '_instanceWallet').resolves(mockWallet)
 
       // Ensure we open the test file, not the production wallet file.
-      uut.WALLET_FILE = testWalletFile
+      uut.config.walletFile = testWalletFile
       const walletData = await uut.openWallet()
       // console.log('walletData: ', walletData)
 
