@@ -56,7 +56,8 @@ RUN git clone https://github.com/Permissionless-Software-Foundation/ipfs-service
 WORKDIR /home/safeuser/ipfs-service-provider
 
 # For development: switch to unstable branch
-RUN git checkout ct-unstable
+#RUN git checkout ct-unstable
+RUN git checkout libp2p-v1.3.0
 
 # Install dependencies
 #RUN mkdir .ipfsdata
