@@ -69,3 +69,5 @@ data/
 run-dev.sh
 
 !README.md
+
+wallet.json
