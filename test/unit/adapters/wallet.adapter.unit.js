@@ -277,9 +277,6 @@ describe('#wallet', () => {
       // uut.WALLET_FILE = testWalletFile
       uut.config.walletFile = testWalletFile
 
-      // mock instance of minimal-slp-wallet
-      // uut.bchWallet = new MockBchWallet()
-
       const result = await uut.getKeyPair()
       // console.log('result: ', result)
 
