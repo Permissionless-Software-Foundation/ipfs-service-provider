@@ -18,7 +18,7 @@ import * as url from 'url'
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 // Global constants
-const testWalletFile = `${__dirname.toString()}/test-wallet.json`
+const testWalletFile = `${__dirname.toString()}test-wallet.json`
 
 describe('#wallet', () => {
   let uut
@@ -59,7 +59,7 @@ describe('#wallet', () => {
       // Mock dependencies
       uut.BchWallet = MockBchWallet
       // Ensure we open the test file, not the production wallet file.
-      uut.walletFile = testWalletFile
+      uut.config.walletFile = testWalletFile
       const result = await uut.openWallet()
       // console.log('result: ', result)
       assert.property(result, 'mnemonic')
@@ -75,7 +75,7 @@ describe('#wallet', () => {
     it('should open existing wallet file', async () => {
       // This test case uses the file created in the previous test case.
       // Ensure we open the test file, not the production wallet file.
-      uut.walletFile = testWalletFile
+      uut.config.walletFile = testWalletFile
       const result = await uut.openWallet()
       // console.log('result: ', result)
       assert.property(result, 'mnemonic')
@@ -274,11 +274,12 @@ describe('#wallet', () => {
   describe('#getKeyPair', () => {
     it('should return an object with a key pair', async () => {
       // Ensure we open the test file, not the production wallet file.
-      uut.WALLET_FILE = testWalletFile
-      // mock instance of minimal-slp-wallet
-      uut.bchWallet = new MockBchWallet()
+      // uut.WALLET_FILE = testWalletFile
+      uut.config.walletFile = testWalletFile
+
       const result = await uut.getKeyPair()
       // console.log('result: ', result)
+
       assert.property(result, 'cashAddress')
       assert.property(result, 'wif')
       assert.property(result, 'hdIndex')
