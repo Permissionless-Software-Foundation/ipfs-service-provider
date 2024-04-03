@@ -16,9 +16,6 @@ export COORD_NAME=ipfs-service-provider-generic
 # and you must forward that subdomain to the IPFS_WS_PORT.
 #export CR_DOMAIN=subdomain.yourdomain.com
 
-# Debug level. 0 = minimal info. 2 = max info.
-export DEBUG_LEVEL=2
-
 # END: Optional configuration settings
 
 
