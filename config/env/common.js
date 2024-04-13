@@ -122,7 +122,7 @@ export default {
     },
 
     // If this node has an IP4 address or domain name used to provide a REST API.
-    web2Api: null
+    web2Api: process.env.WEB2_API ? process.env.WEB2_API : null
   },
 
   // IPFS Ports
