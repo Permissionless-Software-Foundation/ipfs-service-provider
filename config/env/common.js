@@ -119,7 +119,10 @@ export default {
       '@type': 'Organization',
       name: 'Permissionless Software Foundation',
       url: 'https://PSFoundation.cash'
-    }
+    },
+
+    // If this node has an IP4 address or domain name used to provide a REST API.
+    web2Api: null
   },
 
   // IPFS Ports
