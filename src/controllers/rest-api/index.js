@@ -29,7 +29,8 @@ class RESTControllers {
       )
     }
 
-    // console.log('Controllers localConfig: ', localConfig)
+    // Bind 'this' object to all subfunctions.
+    this.attachRESTControllers = this.attachRESTControllers.bind(this)
   }
 
   attachRESTControllers (app) {
