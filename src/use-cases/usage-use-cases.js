@@ -21,9 +21,7 @@ class UsageUseCases {
 
     // Bind 'this' object to all subfunctions
 
-
     // State
-
   }
 
   // Track the calls to a REST API
