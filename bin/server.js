@@ -25,9 +25,13 @@ import config from '../config/index.js' // this first.
 
 import AdminLib from '../src/adapters/admin.js'
 import errorMiddleware from '../src/controllers/rest-api/middleware/error.js'
+import { usageMiddleware } from '../src/use-cases/usage-use-cases.js'
 import wlogger from '../src/adapters/wlogger.js'
 import Controllers from '../src/controllers/index.js'
 import { applyPassportMods } from '../config/passport.js'
+
+// import {usageMiddleware} from '../src/use-cases/usage-use-cases.js'
+// console.log('usageMiddleware: ', usageMiddleware)
 
 class Server {
   constructor () {
@@ -65,6 +69,7 @@ class Server {
       app.use(bodyParser())
       app.use(session())
       app.use(errorMiddleware())
+      app.use(usageMiddleware())
 
       // Used to generate the docs.
       app.use(mount('/', serve(`${process.cwd()}/docs`)))
