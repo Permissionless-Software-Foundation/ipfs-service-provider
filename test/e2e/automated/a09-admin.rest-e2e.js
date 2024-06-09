@@ -17,7 +17,7 @@ describe('Admin', () => {
 
   afterEach(() => sandbox.restore())
 
-  if(!config.noMongo) {
+  if (!config.noMongo) {
     describe('loginAdmin()', () => {
       it('should logind admin', async () => {
         try {

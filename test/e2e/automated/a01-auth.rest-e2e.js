@@ -23,7 +23,7 @@ const context = {}
 
 const LOCALHOST = `http://localhost:${config.port}`
 
-if(!config.noMongo) {
+if (!config.noMongo) {
   describe('Auth', () => {
     before(async () => {
       const app = new Server()

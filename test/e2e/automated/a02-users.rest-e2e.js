@@ -19,8 +19,7 @@ let sandbox
 
 // const mockContext = require('../../unit/mocks/ctx-mock').context
 
-if(!config.noMongo) {
-
+if (!config.noMongo) {
   describe('Users', () => {
     before(async () => {
       // console.log(`config: ${JSON.stringify(config, null, 2)}`)
