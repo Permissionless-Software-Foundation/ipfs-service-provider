@@ -154,7 +154,7 @@ class IpfsAdapter {
       // Configure services
       const services = {
         identify: identify(),
-        pubsub: gossipsub({ allowPublishToZeroPeers: true })
+        pubsub: gossipsub({ allowPublishToZeroTopicPeers: true })
       }
       if (this.config.isCircuitRelay) {
         console.log('Helia (IPFS) node IS configured as Circuit Relay')
@@ -253,6 +253,8 @@ class IpfsAdapter {
       !this.fs.existsSync(`${IPFS_DIR}/blockstore`) && this.fs.mkdirSync(`${IPFS_DIR}/blockstore`)
 
       !this.fs.existsSync(`${IPFS_DIR}/datastore`) && this.fs.mkdirSync(`${IPFS_DIR}/datastore`)
+
+      // !fs.existsSync(`${IPFS_DIR}/datastore/peers`) && fs.mkdirSync(`${IPFS_DIR}/datastore/peers`)
 
       return true
     } catch (err) {
