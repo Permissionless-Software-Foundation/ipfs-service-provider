@@ -22,7 +22,7 @@ services:
       options:
         max-size: '10m'
         max-file: '10'
-    mem_limit: 4000mb
+    mem_limit: 1000mb
     links:
       - mongo-ipfs-service
     ports:
