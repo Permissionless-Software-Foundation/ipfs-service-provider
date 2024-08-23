@@ -43,7 +43,7 @@
     "datastore-fs": "9.1.7",
     "glob": "7.1.6",
     "helia": "4.2.5",
-    "helia-coord": "1.5.11",
+    "helia-coord": "1.5.12",
     "jsonrpc-lite": "2.2.0",
     "jsonwebtoken": "8.5.1",
     "jwt-bch-lib": "1.3.0",
