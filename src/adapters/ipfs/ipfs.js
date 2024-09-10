@@ -175,25 +175,15 @@ class IpfsAdapter {
         console.log('Helia (IPFS) node IS NOT configured as Circuit Relay')
       }
 
-      // Configure transports
-      let transports
-      if (process.env.CONNECT_PREF === 'direct') {
-        transports = [
-          tcp(),
-          webSockets(),
-          webRTC()
-        ]
-      } else {
-        transports = [
-          tcp(),
-          webSockets(),
-          circuitRelayTransport({
-            discoverRelays: 3,
-            reservationConcurrency: 3
-          }),
-          webRTC()
-        ]
-      }
+      const transports = [
+        tcp(),
+        webSockets(),
+        circuitRelayTransport({
+          discoverRelays: 3,
+          reservationConcurrency: 3
+        }),
+        webRTC()
+      ]
 
       // libp2p is the networking layer that underpins Helia
       const libp2p = await this.createLibp2p({
