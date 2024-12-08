@@ -21,6 +21,13 @@ class Controllers {
     this.useCases = new UseCases({ adapters: this.adapters })
     this.timerControllers = new TimerControllers({ adapters: this.adapters, useCases: this.useCases })
     this.config = config
+
+    // Bind 'this' object to all subfunction
+    this.initAdapters = this.initAdapters.bind(this)
+    this.initUseCases = this.initUseCases.bind(this)
+    this.attachRESTControllers = this.attachRESTControllers.bind(this)
+    this.attachControllers = this.attachControllers.bind(this)
+    this.attachRPCControllers = this.attachRPCControllers.bind(this)
   }
 
   // Spin up any adapter libraries that have async startup needs.
