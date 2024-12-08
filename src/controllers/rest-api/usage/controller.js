@@ -7,7 +7,7 @@
 // Local libraries
 import wlogger from '../../../adapters/wlogger.js'
 
-class IpfsRESTControllerLib {
+class UsageRESTControllerLib {
   constructor (localConfig = {}) {
     // Dependency Injection.
     this.adapters = localConfig.adapters
@@ -29,97 +29,27 @@ class IpfsRESTControllerLib {
 
     // Bind 'this' object to all subfunctions
     this.getStatus = this.getStatus.bind(this)
-    this.getPeers = this.getPeers.bind(this)
-    this.getRelays = this.getRelays.bind(this)
     this.handleError = this.handleError.bind(this)
-    this.connect = this.connect.bind(this)
-    this.getThisNode = this.getThisNode.bind(this)
   }
 
   /**
-   * @api {get} /ipfs Get status on IPFS infrastructure
+   * @api {get} /usage Get status on IPFS infrastructure
    * @apiPermission public
-   * @apiName GetIpfsStatus
-   * @apiGroup REST BCH
+   * @apiName GetUsageStatus
+   * @apiGroup REST Usage
    *
    * @apiExample Example usage:
-   * curl -H "Content-Type: application/json" -X GET localhost:5001/ipfs
+   * curl -H "Content-Type: application/json" -X GET localhost:5020/usage
    *
    */
   async getStatus (ctx) {
     try {
-      const status = await this.adapters.ipfs.getStatus()
+      // const status = await this.adapters.ipfs.getStatus()
+      const status = await this.useCases.usage.getRestSummary()
 
       ctx.body = { status }
     } catch (err) {
-      wlogger.error('Error in ipfs/controller.js/getStatus(): ')
-      // ctx.throw(422, err.message)
-      this.handleError(ctx, err)
-    }
-  }
-
-  // Return information on IPFS peers this node is connected to.
-  async getPeers (ctx) {
-    try {
-      const showAll = ctx.request.body.showAll
-
-      const peers = await this.adapters.ipfs.getPeers(showAll)
-
-      ctx.body = { peers }
-    } catch (err) {
-      wlogger.error('Error in ipfs/controller.js/getPeers(): ')
-      // ctx.throw(422, err.message)
-      this.handleError(ctx, err)
-    }
-  }
-
-  // Get data about the known Circuit Relays. Hydrate with data from peers list.
-  async getRelays (ctx) {
-    try {
-      const relays = await this.adapters.ipfs.getRelays()
-
-      ctx.body = { relays }
-    } catch (err) {
-      wlogger.error('Error in ipfs/controller.js/getRelays(): ')
-      // ctx.throw(422, err.message)
-      this.handleError(ctx, err)
-    }
-  }
-
-  async connect (ctx) {
-    try {
-      const multiaddr = ctx.request.body.multiaddr
-      const getDetails = ctx.request.body.getDetails
-
-      // console.log('this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.adapters.ipfs: ', this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.adapters.ipfs)
-      const result = await this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.adapters.ipfs.connectToPeer({ multiaddr, getDetails })
-      // console.log('result: ', result)
-
-      ctx.body = result
-    } catch (err) {
-      wlogger.error('Error in ipfs/controller.js/connect():', err)
-      // ctx.throw(422, err.message)
-      this.handleError(ctx, err)
-    }
-  }
-
-  /**
-   * @api {get} /ipfs/node Get a copy of the thisNode object from helia-coord
-   * @apiPermission public
-   * @apiName GetThisNode
-   * @apiGroup REST BCH
-   *
-   * @apiExample Example usage:
-   * curl -H "Content-Type: application/json" -X GET localhost:5001/ipfs/node
-   *
-   */
-  async getThisNode (ctx) {
-    try {
-      const thisNode = this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
-
-      ctx.body = { thisNode }
-    } catch (err) {
-      wlogger.error('Error in ipfs/controller.js/getThisNode(): ')
+      wlogger.error('Error in usage/controller.js/getStatus(): ')
       // ctx.throw(422, err.message)
       this.handleError(ctx, err)
     }
@@ -142,4 +72,4 @@ class IpfsRESTControllerLib {
 }
 
 // module.exports = IpfsRESTControllerLib
-export default IpfsRESTControllerLib
+export default UsageRESTControllerLib

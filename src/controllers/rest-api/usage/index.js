@@ -6,12 +6,12 @@
 import Router from 'koa-router'
 
 // Local libraries.
-import IPFSRESTControllerLib from './controller.js'
+import UsageRESTControllerLib from './controller.js'
 import Validators from '../middleware/validators.js'
 
 // let _this
 
-class IpfsRouter {
+class UsageRouter {
   constructor (localConfig = {}) {
     // Dependency Injection.
     this.adapters = localConfig.adapters
@@ -33,11 +33,11 @@ class IpfsRouter {
     }
 
     // Encapsulate dependencies.
-    this.ipfsRESTController = new IPFSRESTControllerLib(dependencies)
+    this.usageRESTController = new UsageRESTControllerLib(dependencies)
     this.validators = new Validators()
 
     // Instantiate the router and set the base route.
-    const baseUrl = '/ipfs'
+    const baseUrl = '/usage'
     this.router = new Router({ prefix: baseUrl })
 
     // _this = this
@@ -51,11 +51,7 @@ class IpfsRouter {
     }
 
     // Define the routes and attach the controller.
-    this.router.get('/', this.ipfsRESTController.getStatus)
-    this.router.post('/peers', this.ipfsRESTController.getPeers)
-    this.router.post('/relays', this.ipfsRESTController.getRelays)
-    this.router.post('/connect', this.ipfsRESTController.connect)
-    this.router.get('/node', this.ipfsRESTController.getThisNode)
+    this.router.get('/', this.usageRESTController.getStatus)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())
@@ -64,4 +60,4 @@ class IpfsRouter {
 }
 
 // module.exports = BchRouter
-export default IpfsRouter
+export default UsageRouter

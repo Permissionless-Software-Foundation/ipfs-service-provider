@@ -20,6 +20,7 @@ class UsageUseCases {
     }
 
     // Bind 'this' object to all subfunctions
+    this.getRestSummary = this.getRestSummary.bind(this)
 
     // State
   }
