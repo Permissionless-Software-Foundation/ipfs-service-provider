@@ -47,9 +47,9 @@ This web server spins up an embedded IPFS ([Helia](https://github.com/ipfs/helia
 
 ## Requirements
 
-- node **^16.20.2**
-- npm **^8.19.4**
-- Docker **^20.10.8**
+- node **^20.16.0**
+- npm **^10.8.1**
+- Docker **^24.0.7**
 - Docker Compose **^1.27.4**
 
 ## Installation

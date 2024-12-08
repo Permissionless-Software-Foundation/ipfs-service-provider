@@ -43,6 +43,9 @@ export default {
     ? process.env.EMAILPASS
     : 'emailpassword',
 
+  // Enable or Disable the usage of Mongo DB.
+  noMongo: process.env.NO_MONGO ? true : false,
+
   // BEGIN WALLET CONFIGURATION
 
   // BCH Mnemonic for generating encryption keys and payment address
