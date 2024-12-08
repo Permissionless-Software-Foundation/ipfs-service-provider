@@ -30,9 +30,6 @@ import wlogger from '../src/adapters/wlogger.js'
 import Controllers from '../src/controllers/index.js'
 import { applyPassportMods } from '../config/passport.js'
 
-// import {usageMiddleware} from '../src/use-cases/usage-use-cases.js'
-// console.log('usageMiddleware: ', usageMiddleware)
-
 class Server {
   constructor () {
     // Encapsulate dependencies

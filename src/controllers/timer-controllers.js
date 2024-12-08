@@ -38,7 +38,7 @@ class TimerControllers {
     // Any new timer control functions can be added here. They will be started
     // when the server starts.
     this.optimizeWalletHandle = setInterval(this.exampleTimerFunc, 60000 * 60)
-    this.cleanUsageHandle = setInterval(this.cleanUsage, 60000 * 1) // 1 hour
+    this.cleanUsageHandle = setInterval(this.cleanUsage, 60000 * 60) // 1 hour
 
     return true
   }
