@@ -29,6 +29,8 @@ class UsageRESTControllerLib {
 
     // Bind 'this' object to all subfunctions
     this.getStatus = this.getStatus.bind(this)
+    this.getTopIps = this.getTopIps.bind(this)
+    this.getTopEndpoints = this.getTopEndpoints.bind(this)
     this.handleError = this.handleError.bind(this)
   }
 
@@ -42,14 +44,58 @@ class UsageRESTControllerLib {
    * curl -H "Content-Type: application/json" -X GET localhost:5020/usage
    *
    */
-  async getStatus (ctx) {
+  getStatus (ctx) {
     try {
       // const status = await this.adapters.ipfs.getStatus()
-      const status = await this.useCases.usage.getRestSummary()
+      const status = this.useCases.usage.getRestSummary()
 
       ctx.body = { status }
     } catch (err) {
       wlogger.error('Error in usage/controller.js/getStatus(): ')
+      // ctx.throw(422, err.message)
+      this.handleError(ctx, err)
+    }
+  }
+
+  /**
+   * @api {get} /usage/ips Get top IP addresses consuming the REST API
+   * @apiPermission public
+   * @apiName GetUsageIPs
+   * @apiGroup REST Usage
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X GET localhost:5020/usage/ips
+   *
+   */
+  getTopIps (ctx) {
+    try {
+      const ips = this.useCases.usage.getTopIps()
+
+      ctx.body = { ips }
+    } catch (err) {
+      wlogger.error('Error in usage/controller.js/getTopIps(): ')
+      // ctx.throw(422, err.message)
+      this.handleError(ctx, err)
+    }
+  }
+
+  /**
+   * @api {get} /usage/endpoints Get top endpoints consumed from the REST API
+   * @apiPermission public
+   * @apiName GetUsageEndpoints
+   * @apiGroup REST Usage
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X GET localhost:5020/usage/endpoints
+   *
+   */
+  getTopEndpoints (ctx) {
+    try {
+      const endpoints = this.useCases.usage.getTopEndpoints()
+
+      ctx.body = { endpoints }
+    } catch (err) {
+      wlogger.error('Error in usage/controller.js/getTopEndpoints(): ')
       // ctx.throw(422, err.message)
       this.handleError(ctx, err)
     }

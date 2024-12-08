@@ -52,6 +52,8 @@ class UsageRouter {
 
     // Define the routes and attach the controller.
     this.router.get('/', this.usageRESTController.getStatus)
+    this.router.get('/ips', this.usageRESTController.getTopIps)
+    this.router.get('/endpoints', this.usageRESTController.getTopEndpoints)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())

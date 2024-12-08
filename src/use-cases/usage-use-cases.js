@@ -7,7 +7,7 @@
 
 // This global variable is used to share data between the REST middleware and
 // the Usage Use Case class instance.
-const restCalls = []
+let restCalls = []
 
 class UsageUseCases {
   constructor (localConfig = {}) {
@@ -21,8 +21,25 @@ class UsageUseCases {
 
     // Bind 'this' object to all subfunctions
     this.getRestSummary = this.getRestSummary.bind(this)
+    this.getTopIps = this.getTopIps.bind(this)
+    this.getTopEndpoints = this.getTopEndpoints.bind(this)
 
     // State
+  }
+
+  // Clean up the state by removing entries that are older than 24 hours. This
+  // ensures stats reflect only the last 24 hours.
+  // This function is called by a Timer Controller.
+  cleanUsage () {
+    try {
+      const now = new Date()
+      const twentyFourHoursAgo = now.getTime() - (60000 * 60 * 24)
+
+      restCalls = restCalls.filter(x => x.timestamp > twentyFourHoursAgo)
+    } catch (err) {
+      console.error('Error in usage-use-cases.js/cleanUsage()')
+      throw err
+    }
   }
 
   // Track the calls to a REST API
@@ -33,6 +50,56 @@ class UsageUseCases {
       return restCalls.length
     } catch (err) {
       console.error('Error in usage-use-cases.js/getRestSummary()')
+      throw err
+    }
+  }
+
+  // Get the top 20 IP addresses from the stats.
+  getTopIps () {
+    try {
+      const ips = restCalls.map(x => x.ip)
+
+      // Create a Map to count occurrences of each IP address string
+      const countMap = new Map()
+      ips.forEach(ip => {
+        countMap.set(ip, (countMap.get(ip) || 0) + 1)
+      })
+
+      // Convert the Map into an array of objects with `str` and `cnt` properties
+      const result = Array.from(countMap, ([ip, cnt]) => ({ ip, cnt }))
+
+      // Sort the results by the `cnt` property in descending order
+      result.sort((a, b) => b.cnt - a.cnt)
+
+      // Ensure the result has at most 20 elements
+      return result.slice(0, 20)
+    } catch (err) {
+      console.error('Error in usage-use-cases.js/getTopIps()')
+      throw err
+    }
+  }
+
+  // Get the top 20 most consumed endpoints.
+  getTopEndpoints () {
+    try {
+      const endpoints = restCalls.map(x => `${x.method} ${x.url}`)
+
+      // Create a Map to count occurrences of each IP address string
+      const countMap = new Map()
+      endpoints.forEach(endpoint => {
+        countMap.set(endpoint, (countMap.get(endpoint) || 0) + 1)
+      })
+
+      // Convert the Map into an array of objects with `str` and `cnt` properties
+      const result = Array.from(countMap, ([endpoint, cnt]) => ({ endpoint, cnt }))
+
+      // Sort the results by the `cnt` property in descending order
+      result.sort((a, b) => b.cnt - a.cnt)
+
+      // Ensure the result has at most 20 elements
+      return result.slice(0, 20)
+    } catch (err) {
+      console.error('Error in usage-use-cases.js/getTopEndpoints()')
       throw err
     }
   }
