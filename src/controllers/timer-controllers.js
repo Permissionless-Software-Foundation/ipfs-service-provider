@@ -68,6 +68,8 @@ class TimerControllers {
   cleanUsage () {
     try {
       this.useCases.usage.cleanUsage()
+
+      return true
     } catch (err) {
       console.error('Error in time-controller.js/cleanUsage(): ', err)
 
