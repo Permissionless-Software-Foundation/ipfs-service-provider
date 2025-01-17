@@ -20,6 +20,7 @@ class UsageUseCases {
     }
 
     // Bind 'this' object to all subfunctions
+    this.cleanUsage = this.cleanUsage.bind(this)
     this.getRestSummary = this.getRestSummary.bind(this)
     this.getTopIps = this.getTopIps.bind(this)
     this.getTopEndpoints = this.getTopEndpoints.bind(this)
@@ -36,6 +37,7 @@ class UsageUseCases {
       const twentyFourHoursAgo = now.getTime() - (60000 * 60 * 24)
 
       restCalls = restCalls.filter(x => x.timestamp > twentyFourHoursAgo)
+      return restCalls
     } catch (err) {
       console.error('Error in usage-use-cases.js/cleanUsage()')
       throw err
@@ -58,7 +60,6 @@ class UsageUseCases {
   getTopIps () {
     try {
       const ips = restCalls.map(x => x.ip)
-
       // Create a Map to count occurrences of each IP address string
       const countMap = new Map()
       ips.forEach(ip => {
@@ -132,4 +133,4 @@ function usageMiddleware () {
   }
 };
 
-export { UsageUseCases, usageMiddleware }
+export { UsageUseCases, usageMiddleware, restCalls }

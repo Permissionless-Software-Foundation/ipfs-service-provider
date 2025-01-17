@@ -1,5 +1,5 @@
 /*
-  REST API Controller library for the /ipfs route
+  REST API Controller library for the /usage route
 */
 
 // Global npm libraries
@@ -13,19 +13,17 @@ class UsageRESTControllerLib {
     this.adapters = localConfig.adapters
     if (!this.adapters) {
       throw new Error(
-        'Instance of Adapters library required when instantiating /ipfs REST Controller.'
+        'Instance of Adapters library required when instantiating /usage REST Controller.'
       )
     }
     this.useCases = localConfig.useCases
     if (!this.useCases) {
       throw new Error(
-        'Instance of Use Cases library required when instantiating /ipfs REST Controller.'
+        'Instance of Use Cases library required when instantiating /usage REST Controller.'
       )
     }
 
     // Encapsulate dependencies
-    // this.UserModel = this.adapters.localdb.Users
-    // this.userUseCases = this.useCases.user
 
     // Bind 'this' object to all subfunctions
     this.getStatus = this.getStatus.bind(this)
