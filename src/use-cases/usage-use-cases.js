@@ -113,7 +113,7 @@ function usageMiddleware () {
     try {
       await next()
 
-      console.log('ctx.request: ', ctx.request)
+      // console.log('ctx.request: ', ctx.request)
       const now = new Date()
 
       const reqObj = {
@@ -122,7 +122,7 @@ function usageMiddleware () {
         method: ctx.request.method,
         timestamp: now.getTime()
       }
-      console.log('reqObj: ', reqObj)
+      // console.log('reqObj: ', reqObj)
 
       restCalls.push(reqObj)
     } catch (err) {
