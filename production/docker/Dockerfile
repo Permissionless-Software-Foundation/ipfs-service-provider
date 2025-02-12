@@ -56,7 +56,7 @@ RUN git clone https://github.com/Permissionless-Software-Foundation/ipfs-service
 WORKDIR /home/safeuser/ipfs-service-provider
 
 # For development: switch to unstable branch
-RUN git checkout ct-unstable
+RUN git checkout helia-v5
 
 # Install dependencies
 #RUN mkdir .ipfsdata
