@@ -28,8 +28,9 @@ import { publicIpv4 } from 'public-ip'
 import { multiaddr } from '@multiformats/multiaddr'
 // import { webRTC } from '@libp2p/webrtc'
 import { keychain } from '@libp2p/keychain'
-import { defaultLogger } from '@libp2p/logger'
 import { unixfs } from '@helia/unixfs'
+import { generateKeyPairFromSeed } from '@libp2p/crypto/keys'
+import crypto from 'crypto'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -64,8 +65,7 @@ class IpfsAdapter {
     this.createNode = this.createNode.bind(this)
     this.stop = this.stop.bind(this)
     this.ensureBlocksDir = this.ensureBlocksDir.bind(this)
-    this.getSeed = this.getSeed.bind(this)
-    this.getKeychain = this.getKeychain.bind(this)
+    this.getPrivateKey = this.getPrivateKey.bind(this)
   }
 
   // Start an IPFS node.
@@ -111,19 +111,6 @@ class IpfsAdapter {
     }
   }
 
-  async getKeychain (datastore) {
-    const keychainInit = {
-      pass: await this.getSeed()
-    }
-
-    const chain = this.keychain(keychainInit)({
-      datastore,
-      logger: defaultLogger()
-    })
-
-    return chain
-  }
-
   // This function creates an IPFS node using Helia.
   // It returns the node as an object.
   async createNode () {
@@ -132,25 +119,9 @@ class IpfsAdapter {
       const blockstore = new FsBlockstore(`${IPFS_DIR}/blockstore`)
       const datastore = new FsDatastore(`${IPFS_DIR}/datastore`)
 
-      // const keychainInit = {
-      //   pass: await this.getSeed()
-      // }
-
-      // Create an identity
-      let peerId
-      // console.log('this.keychain: ', this.keychain)
-      // const chain = this.keychain(keychainInit)({
-      //   datastore,
-      //   logger: defaultLogger()
-      // })
-      const chain = await this.getKeychain(datastore)
-      try {
-        peerId = await chain.exportPeerId('myKey')
-      } catch (err) {
-        await chain.createKey('myKey', 'Ed25519', 4096)
-        peerId = await chain.exportPeerId('myKey')
-      }
-      console.log('peerId: ', peerId)
+      // Get the private key.
+      const privateKey = await this.getPrivateKey()
+      // console.log('privateKey: ', privateKey)
 
       // Configure services
       const services = {
@@ -188,7 +159,8 @@ class IpfsAdapter {
 
       // libp2p is the networking layer that underpins Helia
       const libp2p = await this.createLibp2p({
-        peerId,
+        // peerId,
+        privateKey,
         datastore,
         addresses: {
           listen: [
@@ -245,6 +217,8 @@ class IpfsAdapter {
 
       !this.fs.existsSync(`${IPFS_DIR}/datastore`) && this.fs.mkdirSync(`${IPFS_DIR}/datastore`)
 
+      !this.fs.existsSync(`${IPFS_DIR}/datastore/pkcs8`) && this.fs.mkdirSync(`${IPFS_DIR}/datastore/pkcs8`)
+
       // !fs.existsSync(`${IPFS_DIR}/datastore/peers`) && fs.mkdirSync(`${IPFS_DIR}/datastore/peers`)
 
       return true
@@ -254,30 +228,44 @@ class IpfsAdapter {
     }
   }
 
-  // This function opens the seed used to generate the key for this IPFS peer.
-  // The seed is stored in a JSON file. If it doesn't exist, a new one is created.
-  async getSeed () {
+  // Get the private key from disk, or generate a new one and save it,
+  // if it doesn't exist.
+  async getPrivateKey () {
     try {
-      let seed
+      const filename = `${IPFS_DIR}/privkey.json`
 
-      const filename = `${IPFS_DIR}/seed.json`
-
+      let privKeyHex
       try {
         // Try to read the JSON file containing the seed.
-        seed = await this.jsonFiles.readJSON(filename)
+        privKeyHex = await this.jsonFiles.readJSON(filename)
+        // console.log('saved privKeyHex: ', privKeyHex)
       } catch (err) {
-        const seedNum = Math.floor(Math.random() * 1000000000000000000000)
-        seed = seedNum.toString()
+        // Generate a new private key and save it to disk.
+
+        // Generate a new private key and save it to disk.
+        const randomBuffer = crypto.randomBytes(32)
+        // console.log('randomBuffer: ', randomBuffer)
+
+        privKeyHex = randomBuffer.toString('hex')
+        // console.log('new privKeyHex: ', privKeyHex)
 
         // Save the newly generated seed
-        await this.jsonFiles.writeJSON(seed, filename)
+        await this.jsonFiles.writeJSON(privKeyHex, filename)
       }
 
-      // console.log('getSeed() seed: ', seed)
+      // Convert the saved hex string to a buffer.
+      const privKeyBuf = Buffer.from(privKeyHex, 'hex')
 
-      return seed
+      // Convert the buffer to a Uint8Array 'seed'
+      const seed = new Uint8Array(privKeyBuf.buffer, privKeyBuf.byteOffset, privKeyBuf.byteLength)
+      // console.log('seed: ', seed)
+
+      // Generate a ED25519 key pair.
+      const privKey = await generateKeyPairFromSeed('Ed25519', seed)
+
+      return privKey
     } catch (err) {
-      console.error('Error in adapters/ipfs/ipfs.js/getSeed()')
+      console.error('Error in adapters/ipfs/ipfs.js/getPrivateKey(): ', err)
       throw err
     }
   }
