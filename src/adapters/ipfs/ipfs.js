@@ -150,6 +150,7 @@ class IpfsAdapter {
         await chain.createKey('myKey', 'Ed25519', 4096)
         peerId = await chain.exportPeerId('myKey')
       }
+      console.log('peerId: ', peerId)
 
       // Configure services
       const services = {
@@ -198,7 +199,7 @@ class IpfsAdapter {
           ]
         },
         transports,
-        connectionEncryption: [
+        connectionEncrypters: [
           noise()
         ],
         streamMuxers: [
