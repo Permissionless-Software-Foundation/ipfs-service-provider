@@ -31,6 +31,7 @@ import { keychain } from '@libp2p/keychain'
 import { unixfs } from '@helia/unixfs'
 import { generateKeyPairFromSeed } from '@libp2p/crypto/keys'
 import crypto from 'crypto'
+import { ping } from '@libp2p/ping'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -126,7 +127,8 @@ class IpfsAdapter {
       // Configure services
       const services = {
         identify: identify(),
-        pubsub: gossipsub({ allowPublishToZeroTopicPeers: true })
+        pubsub: gossipsub({ allowPublishToZeroTopicPeers: true }),
+        ping: ping()
       }
       if (this.config.isCircuitRelay) {
         console.log('Helia (IPFS) node IS configured as Circuit Relay')
@@ -167,7 +169,8 @@ class IpfsAdapter {
             '/ip4/127.0.0.1/tcp/0',
             `/ip4/0.0.0.0/tcp/${this.config.ipfsTcpPort}`,
             `/ip4/0.0.0.0/tcp/${this.config.ipfsWsPort}/ws`,
-            '/webrtc'
+            '/webrtc',
+            '/p2p-circuit'
           ]
         },
         transports,
