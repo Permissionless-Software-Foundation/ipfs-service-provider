@@ -19,7 +19,7 @@ import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 // import { bootstrap } from '@libp2p/bootstrap'
 // import { identifyService } from 'libp2p/identify'
-import { identify } from '@libp2p/identify'
+import { identify, identifyPush } from '@libp2p/identify'
 // import { circuitRelayServer, circuitRelayTransport } from '@libp2p/circuit-relay-v2'
 import { circuitRelayServer } from '@libp2p/circuit-relay-v2'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
@@ -129,6 +129,7 @@ class IpfsAdapter {
       // Configure services
       const services = {
         identify: identify(),
+        identifyPush: identifyPush(),
         pubsub: gossipsub({ allowPublishToZeroTopicPeers: true }),
         keychain: keychain(keychainInit)
       }
