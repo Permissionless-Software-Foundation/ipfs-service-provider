@@ -24,6 +24,7 @@ export IPFS_API_PORT=5001
 # Configure IPFS ports
 export IPFS_TCP_PORT=4001
 #export IPFS_WS_PORT=5269
+#export IPFS_WEBRTC_PORT=5270
 
 # MongoDB connection string.
 export DBURL=mongodb://localhost:27017/ipfs-service-dev

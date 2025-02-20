@@ -6,6 +6,7 @@
 export PORT=5001 # REST API port
 export IPFS_TCP_PORT=5268
 export IPFS_WS_PORT=5269
+export IPFS_WEBRTC_PORT=5270
 
 # The human-readible name that is used when displaying data about this node.
 export COORD_NAME=ipfs-service-provider-generic
