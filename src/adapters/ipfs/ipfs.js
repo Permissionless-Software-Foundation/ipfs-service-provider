@@ -28,8 +28,8 @@ import { publicIpv4 } from 'public-ip'
 import { multiaddr } from '@multiformats/multiaddr'
 // import { webRTC } from '@libp2p/webrtc'
 import { keychain } from '@libp2p/keychain'
-import { defaultLogger } from '@libp2p/logger'
 import { unixfs } from '@helia/unixfs'
+import { loadOrCreateSelfKey } from '@libp2p/config'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -65,7 +65,6 @@ class IpfsAdapter {
     this.stop = this.stop.bind(this)
     this.ensureBlocksDir = this.ensureBlocksDir.bind(this)
     this.getSeed = this.getSeed.bind(this)
-    this.getKeychain = this.getKeychain.bind(this)
   }
 
   // Start an IPFS node.
@@ -111,19 +110,6 @@ class IpfsAdapter {
     }
   }
 
-  async getKeychain (datastore) {
-    const keychainInit = {
-      pass: await this.getSeed()
-    }
-
-    const chain = this.keychain(keychainInit)({
-      datastore,
-      logger: defaultLogger()
-    })
-
-    return chain
-  }
-
   // This function creates an IPFS node using Helia.
   // It returns the node as an object.
   async createNode () {
@@ -132,44 +118,33 @@ class IpfsAdapter {
       const blockstore = new FsBlockstore(`${IPFS_DIR}/blockstore`)
       const datastore = new FsDatastore(`${IPFS_DIR}/datastore`)
 
-      // const keychainInit = {
-      //   pass: await this.getSeed()
-      // }
+      const keychainInit = {
+        selfKey: 'myKey',
+        pass: await this.getSeed()
+      }
 
       // Create an identity
-      let peerId
-      // console.log('this.keychain: ', this.keychain)
-      // const chain = this.keychain(keychainInit)({
-      //   datastore,
-      //   logger: defaultLogger()
-      // })
-      const chain = await this.getKeychain(datastore)
-      try {
-        peerId = await chain.exportPeerId('myKey')
-      } catch (err) {
-        await chain.createKey('myKey', 'Ed25519', 4096)
-        peerId = await chain.exportPeerId('myKey')
-      }
+      const privateKey = await loadOrCreateSelfKey(datastore, keychainInit)
 
       // Configure services
       const services = {
         identify: identify(),
-        pubsub: gossipsub({ allowPublishToZeroTopicPeers: true })
+        pubsub: gossipsub({ allowPublishToZeroTopicPeers: true }),
+        keychain: keychain(keychainInit)
       }
       if (this.config.isCircuitRelay) {
         console.log('Helia (IPFS) node IS configured as Circuit Relay')
         services.relay = circuitRelayServer({ // makes the node function as a relay server
           hopTimeout: 30 * 1000, // incoming relay requests must be resolved within this time limit
-          advertise: true,
           reservations: {
             maxReservations: 15, // how many peers are allowed to reserve relay slots on this server
             reservationClearInterval: 300 * 1000, // how often to reclaim stale reservations
             applyDefaultLimit: true, // whether to apply default data/duration limits to each relayed connection
             defaultDurationLimit: 2 * 60 * 1000, // the default maximum amount of time a relayed connection can be open for
-            defaultDataLimit: BigInt(2 << 7), // the default maximum number of bytes that can be transferred over a relayed connection
-            maxInboundHopStreams: 32, // how many inbound HOP streams are allow simultaneously
-            maxOutboundHopStreams: 64 // how many outbound HOP streams are allow simultaneously
-          }
+            defaultDataLimit: BigInt(2 << 7) // the default maximum number of bytes that can be transferred over a relayed connection
+          },
+          maxInboundHopStreams: 32, // how many inbound HOP streams are allow simultaneously
+          maxOutboundHopStreams: 64 // how many outbound HOP streams are allow simultaneously
         })
       } else {
         console.log('Helia (IPFS) node IS NOT configured as Circuit Relay')
@@ -187,7 +162,7 @@ class IpfsAdapter {
 
       // libp2p is the networking layer that underpins Helia
       const libp2p = await this.createLibp2p({
-        peerId,
+        privateKey,
         datastore,
         addresses: {
           listen: [
@@ -198,7 +173,7 @@ class IpfsAdapter {
           ]
         },
         transports,
-        connectionEncryption: [
+        connectionEncrypters: [
           noise()
         ],
         streamMuxers: [
