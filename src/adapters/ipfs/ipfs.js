@@ -145,7 +145,6 @@ class IpfsAdapter {
         console.log('Helia (IPFS) node IS configured as Circuit Relay')
         services.relay = circuitRelayServer({ // makes the node function as a relay server
           hopTimeout: 30 * 1000, // incoming relay requests must be resolved within this time limit
-          advertise: true,
           reservations: {
             maxReservations: 15, // how many peers are allowed to reserve relay slots on this server
             reservationClearInterval: 300 * 1000, // how often to reclaim stale reservations
