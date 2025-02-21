@@ -203,40 +203,40 @@ describe('#IPFS-adapter', () => {
     })
   })
 
-  // describe('#getSeed', () => {
-  //   it('should read the seed from the JSON file', async () => {
-  //     // Mock dependencies and force desired code path
-  //     sandbox.stub(uut.jsonFiles, 'readJSON').resolves('12345678')
+  describe('#getSeed', () => {
+    it('should read the seed from the JSON file', async () => {
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.jsonFiles, 'readJSON').resolves('12345678')
 
-  //     const result = await uut.getSeed()
-  //     // console.log('result: ', result)
+      const result = await uut.getSeed()
+      // console.log('result: ', result)
 
-  //     assert.isString(result)
-  //   })
+      assert.isString(result)
+    })
 
-  //   it('should generate a new seed if the JSON file is not found', async () => {
-  //     // Mock dependencies and force desired code path
-  //     sandbox.stub(uut.jsonFiles, 'readJSON').rejects(new Error('test error'))
-  //     sandbox.stub(uut.jsonFiles, 'writeJSON').resolves()
+    it('should generate a new seed if the JSON file is not found', async () => {
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.jsonFiles, 'readJSON').rejects(new Error('test error'))
+      sandbox.stub(uut.jsonFiles, 'writeJSON').resolves()
 
-  //     const result = await uut.getSeed()
-  //     // console.log('result: ', result)
+      const result = await uut.getSeed()
+      // console.log('result: ', result)
 
-  //     assert.isString(result)
-  //   })
+      assert.isString(result)
+    })
 
-  //   it('should catch, report, and throw errors', async () => {
-  //     try {
-  //       // Force an error
-  //       sandbox.stub(uut.jsonFiles, 'readJSON').rejects(new Error('test error'))
-  //       sandbox.stub(uut.jsonFiles, 'writeJSON').rejects(new Error('test error'))
+    it('should catch, report, and throw errors', async () => {
+      try {
+        // Force an error
+        sandbox.stub(uut.jsonFiles, 'readJSON').rejects(new Error('test error'))
+        sandbox.stub(uut.jsonFiles, 'writeJSON').rejects(new Error('test error'))
 
-  //       await uut.getSeed()
+        await uut.getSeed()
 
-  //       assert.fail('Unexpected code path')
-  //     } catch (err) {
-  //       assert.include(err.message, 'test error')
-  //     }
-  //   })
-  // })
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'test error')
+      }
+    })
+  })
 })
