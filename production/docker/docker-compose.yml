@@ -26,9 +26,12 @@ services:
     links:
       - mongo-ipfs-service
     ports:
-      - '5010:5010' # <host port>:<container port>
-      - '4001:4001'
-      - '4003:4003'
+      # <host port>:<container port>
+      - '5010:5010' # REST API
+      - '4001:4001' # TCP
+      - '4003:4003' # Websockets
+      - '4005:4005' # WebRTC
+
     volumes:
       - ../data/ipfsdata:/home/safeuser/ipfs-service-provider/.ipfsdata
       - ./start-production.sh:/home/safeuser/ipfs-service-provider/start-production.sh
