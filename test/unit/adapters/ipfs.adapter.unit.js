@@ -6,7 +6,7 @@
 import { assert } from 'chai'
 import sinon from 'sinon'
 import cloneDeep from 'lodash.clonedeep'
-import { peerIdFromString } from '@libp2p/peer-id'
+// import { peerIdFromString } from '@libp2p/peer-id'
 
 // Local libraries
 import IPFSLib from '../../../src/adapters/ipfs/ipfs.js'
@@ -165,17 +165,17 @@ describe('#IPFS-adapter', () => {
       uut.config.isCircuitRelay = false
 
       // Mock dependencies and force desired code path.
-      let beenCalled = false
-      sandbox.stub(uut, 'getKeychain').resolves({
-        exportPeerId: async () => {
-          if (!beenCalled) {
-            beenCalled = true
-            throw new Error('test error')
-          }
-          return peerIdFromString('12D3KooWSXF1PnEfiA8bCG8SJduCvzdwHtvhVPK4WC6zzDoto2XP')
-        },
-        createKey: async () => {}
-      })
+      // const beenCalled = false
+      // sandbox.stub(uut, 'getKeychain').resolves({
+      //   exportPeerId: async () => {
+      //     if (!beenCalled) {
+      //       beenCalled = true
+      //       throw new Error('test error')
+      //     }
+      //     return peerIdFromString('12D3KooWSXF1PnEfiA8bCG8SJduCvzdwHtvhVPK4WC6zzDoto2XP')
+      //   },
+      //   createKey: async () => {}
+      // })
       sandbox.stub(uut, 'createLibp2p').resolves()
       sandbox.stub(uut, 'createHelia').resolves({})
 

@@ -19,17 +19,20 @@ import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 // import { bootstrap } from '@libp2p/bootstrap'
 // import { identifyService } from 'libp2p/identify'
-import { identify } from '@libp2p/identify'
-// import { circuitRelayServer, circuitRelayTransport } from '@libp2p/circuit-relay-v2'
-import { circuitRelayServer } from '@libp2p/circuit-relay-v2'
+import { identify, identifyPush } from '@libp2p/identify'
+import { circuitRelayServer, circuitRelayTransport } from '@libp2p/circuit-relay-v2'
+// import { circuitRelayServer } from '@libp2p/circuit-relay-v2'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { webSockets } from '@libp2p/websockets'
 import { publicIpv4 } from 'public-ip'
 import { multiaddr } from '@multiformats/multiaddr'
-// import { webRTC } from '@libp2p/webrtc'
+import { webRTC, webRTCDirect } from '@libp2p/webrtc'
 import { keychain } from '@libp2p/keychain'
-import { defaultLogger } from '@libp2p/logger'
 import { unixfs } from '@helia/unixfs'
+// import { generateKeyPairFromSeed } from '@libp2p/crypto/keys'
+// import crypto from 'crypto'
+import { ping } from '@libp2p/ping'
+import { loadOrCreateSelfKey } from '@libp2p/config'
 
 // Local libraries
 import config from '../../../config/index.js'
@@ -64,8 +67,8 @@ class IpfsAdapter {
     this.createNode = this.createNode.bind(this)
     this.stop = this.stop.bind(this)
     this.ensureBlocksDir = this.ensureBlocksDir.bind(this)
+    // this.getPrivateKey = this.getPrivateKey.bind(this)
     this.getSeed = this.getSeed.bind(this)
-    this.getKeychain = this.getKeychain.bind(this)
   }
 
   // Start an IPFS node.
@@ -111,19 +114,6 @@ class IpfsAdapter {
     }
   }
 
-  async getKeychain (datastore) {
-    const keychainInit = {
-      pass: await this.getSeed()
-    }
-
-    const chain = this.keychain(keychainInit)({
-      datastore,
-      logger: defaultLogger()
-    })
-
-    return chain
-  }
-
   // This function creates an IPFS node using Helia.
   // It returns the node as an object.
   async createNode () {
@@ -132,44 +122,38 @@ class IpfsAdapter {
       const blockstore = new FsBlockstore(`${IPFS_DIR}/blockstore`)
       const datastore = new FsDatastore(`${IPFS_DIR}/datastore`)
 
-      // const keychainInit = {
-      //   pass: await this.getSeed()
-      // }
+      // Get the private key.
+      // const privateKey = await this.getPrivateKey()
+      // console.log('privateKey: ', privateKey)
 
       // Create an identity
-      let peerId
-      // console.log('this.keychain: ', this.keychain)
-      // const chain = this.keychain(keychainInit)({
-      //   datastore,
-      //   logger: defaultLogger()
-      // })
-      const chain = await this.getKeychain(datastore)
-      try {
-        peerId = await chain.exportPeerId('myKey')
-      } catch (err) {
-        await chain.createKey('myKey', 'Ed25519', 4096)
-        peerId = await chain.exportPeerId('myKey')
+      const keychainInit = {
+        selfKey: 'myKey',
+        pass: await this.getSeed()
       }
+      const privateKey = await loadOrCreateSelfKey(datastore, keychainInit)
 
       // Configure services
       const services = {
         identify: identify(),
-        pubsub: gossipsub({ allowPublishToZeroTopicPeers: true })
+        identifyPush: identifyPush(),
+        pubsub: gossipsub({ allowPublishToZeroTopicPeers: true }),
+        ping: ping(),
+        keychain: keychain(keychainInit)
       }
       if (this.config.isCircuitRelay) {
         console.log('Helia (IPFS) node IS configured as Circuit Relay')
         services.relay = circuitRelayServer({ // makes the node function as a relay server
           hopTimeout: 30 * 1000, // incoming relay requests must be resolved within this time limit
-          advertise: true,
           reservations: {
             maxReservations: 15, // how many peers are allowed to reserve relay slots on this server
             reservationClearInterval: 300 * 1000, // how often to reclaim stale reservations
             applyDefaultLimit: true, // whether to apply default data/duration limits to each relayed connection
             defaultDurationLimit: 2 * 60 * 1000, // the default maximum amount of time a relayed connection can be open for
-            defaultDataLimit: BigInt(2 << 7), // the default maximum number of bytes that can be transferred over a relayed connection
-            maxInboundHopStreams: 32, // how many inbound HOP streams are allow simultaneously
-            maxOutboundHopStreams: 64 // how many outbound HOP streams are allow simultaneously
-          }
+            defaultDataLimit: BigInt(2 << 7) // the default maximum number of bytes that can be transferred over a relayed connection
+          },
+          maxInboundHopStreams: 32, // how many inbound HOP streams are allow simultaneously
+          maxOutboundHopStreams: 64 // how many outbound HOP streams are allow simultaneously
         })
       } else {
         console.log('Helia (IPFS) node IS NOT configured as Circuit Relay')
@@ -177,28 +161,31 @@ class IpfsAdapter {
 
       const transports = [
         tcp(),
-        webSockets()
-        // circuitRelayTransport({
-        //   discoverRelays: 3,
-        //   reservationConcurrency: 3
-        // }),
-        // webRTC()
+        webSockets(),
+        circuitRelayTransport({
+          discoverRelays: 3,
+          reservationConcurrency: 3
+        }),
+        webRTC(),
+        webRTCDirect()
       ]
 
       // libp2p is the networking layer that underpins Helia
       const libp2p = await this.createLibp2p({
-        peerId,
+        // peerId,
+        privateKey,
         datastore,
         addresses: {
           listen: [
             '/ip4/127.0.0.1/tcp/0',
             `/ip4/0.0.0.0/tcp/${this.config.ipfsTcpPort}`,
-            `/ip4/0.0.0.0/tcp/${this.config.ipfsWsPort}/ws`
-            // '/webrtc'
+            `/ip4/0.0.0.0/tcp/${this.config.ipfsWsPort}/ws`,
+            '/webrtc',
+            '/p2p-circuit'
           ]
         },
         transports,
-        connectionEncryption: [
+        connectionEncrypters: [
           noise()
         ],
         streamMuxers: [
@@ -244,6 +231,8 @@ class IpfsAdapter {
 
       !this.fs.existsSync(`${IPFS_DIR}/datastore`) && this.fs.mkdirSync(`${IPFS_DIR}/datastore`)
 
+      !this.fs.existsSync(`${IPFS_DIR}/datastore/pkcs8`) && this.fs.mkdirSync(`${IPFS_DIR}/datastore/pkcs8`)
+
       // !fs.existsSync(`${IPFS_DIR}/datastore/peers`) && fs.mkdirSync(`${IPFS_DIR}/datastore/peers`)
 
       return true
@@ -280,6 +269,48 @@ class IpfsAdapter {
       throw err
     }
   }
+
+  // Get the private key from disk, or generate a new one and save it,
+  // if it doesn't exist.
+  // async getPrivateKey () {
+  //   try {
+  //     const filename = `${IPFS_DIR}/privkey.json`
+
+  //     let privKeyHex
+  //     try {
+  //       // Try to read the JSON file containing the seed.
+  //       privKeyHex = await this.jsonFiles.readJSON(filename)
+  //       // console.log('saved privKeyHex: ', privKeyHex)
+  //     } catch (err) {
+  //       // Generate a new private key and save it to disk.
+
+  //       // Generate a new private key and save it to disk.
+  //       const randomBuffer = crypto.randomBytes(32)
+  //       // console.log('randomBuffer: ', randomBuffer)
+
+  //       privKeyHex = randomBuffer.toString('hex')
+  //       // console.log('new privKeyHex: ', privKeyHex)
+
+  //       // Save the newly generated seed
+  //       await this.jsonFiles.writeJSON(privKeyHex, filename)
+  //     }
+
+  //     // Convert the saved hex string to a buffer.
+  //     const privKeyBuf = Buffer.from(privKeyHex, 'hex')
+
+  //     // Convert the buffer to a Uint8Array 'seed'
+  //     const seed = new Uint8Array(privKeyBuf.buffer, privKeyBuf.byteOffset, privKeyBuf.byteLength)
+  //     // console.log('seed: ', seed)
+
+  //     // Generate a ED25519 key pair.
+  //     const privKey = await generateKeyPairFromSeed('Ed25519', seed)
+
+  //     return privKey
+  //   } catch (err) {
+  //     console.error('Error in adapters/ipfs/ipfs.js/getPrivateKey(): ', err)
+  //     throw err
+  //   }
+  // }
 }
 
 export default IpfsAdapter
