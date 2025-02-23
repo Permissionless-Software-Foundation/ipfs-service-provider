@@ -122,7 +122,9 @@ class Server {
       console.log('\nConfiguration:')
       console.log(`Circuit Relay: ${this.config.isCircuitRelay}`)
       console.log(`IPFS TCP port: ${this.config.ipfsTcpPort}`)
-      console.log(`IPFS WS port: ${this.config.ipfsWsPort}\n`)
+      console.log(`IPFS WS port: ${this.config.ipfsWsPort}`)
+      console.log(`IPFS WebRTC port: ${this.config.ipfsWebRtcPort}`)
+      console.log(`Connection preference: ${this.config.connectPref}\n`)
 
       return app
     } catch (err) {

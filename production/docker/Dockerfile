@@ -66,9 +66,6 @@ RUN npm install
 # Generate the API docs
 RUN npm run docs
 
-# Expose the port the API will be served on.
-EXPOSE 5010
-
 # Start the application.
 #COPY start-production.sh start-production.sh
 CMD ["./start-production.sh"]
