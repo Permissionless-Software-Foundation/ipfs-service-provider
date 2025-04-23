@@ -20,6 +20,13 @@ class Wallet {
 
     // Bind 'this' object to all subfunctions
     this.instanceWalletWithoutInitialization = this.instanceWalletWithoutInitialization.bind(this)
+    this._instanceWallet = this._instanceWallet.bind(this)
+    this.openWallet = this.openWallet.bind(this)
+    this.instanceWallet = this.instanceWallet.bind(this)
+    this.incrementNextAddress = this.incrementNextAddress.bind(this)
+    this.getKeyPair = this.getKeyPair.bind(this)
+    this.optimize = this.optimize.bind(this)
+    this.getBalance = this.getBalance.bind(this)
   }
 
   // This is used for initializing the wallet, without waiting to update the wallet
