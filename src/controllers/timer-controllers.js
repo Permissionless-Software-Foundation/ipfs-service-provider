@@ -1,6 +1,6 @@
 /*
   This Controller library is concerned with timer-based functions that are
-  kicked off periodicially.
+  kicked off periodically.
 */
 
 import config from '../../config/index.js'
@@ -45,7 +45,7 @@ class TimerControllers {
 
   stopTimers () {
     clearInterval(this.optimizeWalletHandle)
-    clearInterval(this.cleanusageHandle)
+    clearInterval(this.cleanUsageHandle)
   }
 
   // Replace this example function with your own timer handler.
@@ -67,6 +67,9 @@ class TimerControllers {
   // Clean the usage state so that stats reflect the last 24 hours.
   cleanUsage () {
     try {
+      const now = new Date()
+      console.log(`cleanUsage() Timer Controller executing at ${now.toLocaleString()}`)
+
       this.useCases.usage.cleanUsage()
 
       return true

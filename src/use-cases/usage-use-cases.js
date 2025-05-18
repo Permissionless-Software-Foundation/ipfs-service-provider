@@ -36,7 +36,11 @@ class UsageUseCases {
       const now = new Date()
       const twentyFourHoursAgo = now.getTime() - (60000 * 60 * 24)
 
+      console.log('cleanUsage() now: ', now)
+      console.log('cleanUsage() restCalls.length before filtering: ', restCalls.length)
       restCalls = restCalls.filter(x => x.timestamp > twentyFourHoursAgo)
+      console.log('cleanUsage() restCalls.length after filtering: ', restCalls.length)
+
       return restCalls
     } catch (err) {
       console.error('Error in usage-use-cases.js/cleanUsage()')

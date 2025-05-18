@@ -1,6 +1,5 @@
 /*
-Unit tests for the use-cases/usage-use-cases.js  business logic library.
-
+  Unit tests for the use-cases/usage-use-cases.js business logic library.
 */
 
 // Public npm libraries
@@ -58,7 +57,7 @@ describe('#usage-use-case', () => {
 
       // set older mock data
       restCalls.push({
-        timestamp: now.getTime() - (60000 * 60 * 24),
+        timestamp: now.getTime() - (60000 * 60 * 48), // 48 hours ago
         ip: '127.0.0.1'
       })
 
@@ -88,6 +87,7 @@ describe('#usage-use-case', () => {
       }
     })
   })
+
   describe('#getRestSummary', () => {
     it('should get the number of rest calls', () => {
       // Set mock data
@@ -137,6 +137,7 @@ describe('#usage-use-case', () => {
       assert.equal(result[0].ip, 'localhost')
       assert.equal(result[0].cnt, '2')
     })
+
     it('should return a maximum of 20 values', () => {
       //  Fill Array with 21 values
       for (let i = 0; i < 21; i++) {
@@ -154,6 +155,7 @@ describe('#usage-use-case', () => {
 
       assert.equal(result.length, 20)
     })
+
     it('should handle error', () => {
       try {
         // Set mock data
@@ -194,6 +196,7 @@ describe('#usage-use-case', () => {
       assert.equal(result[0].endpoint, 'GET /api/v1/users')
       assert.equal(result[0].cnt, '2')
     })
+
     it('should return a maximum of 20 values', () => {
       //  Fill Array with 21 values
       for (let i = 0; i < 21; i++) {
