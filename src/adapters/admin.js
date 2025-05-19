@@ -51,70 +51,37 @@ class Admin {
   // used by the Listing Manager and test scripts, in order access private API
   // functions.
   async createSystemUser () {
-    // Create the system user.
     try {
-      context.password = _this._randomString(20)
-
-      const options = {
-        method: 'POST',
-        url: `${LOCALHOST}/users`,
-        data: {
-          user: {
-            email: 'system@system.com',
-            password: context.password,
-            name: 'admin'
-          }
-        }
+      const context = {
+        email: 'system@system.com',
+        name: 'admin',
+        password: _this.config.adminPassword || _this._randomString(20),
+        type: 'admin'
       }
-      const result = await _this.axios.request(options)
-      // console.log('admin.data: ', result.data)
+      // Check if the user already exists
+      let adminUser = await _this.User.findOne({ email: context.email })
 
-      context.email = result.data.user.email
-      context.id = result.data.user._id
-      context.token = result.data.token
+      if (adminUser) {
+        // Update the password
+        adminUser.password = context.password
+      } else {
+        // Create a new admin user
+        adminUser = new _this.User(context)
+      }
+      // Update context with the new user id and token
+      context.id = adminUser._id
+      context.token = await adminUser.generateToken()
 
-      // Get the mongoDB entry
-      const user = await _this.User.findById(context.id)
+      // Save the user
+      await adminUser.save()
 
-      // Change the user type to admin
-      user.type = 'admin'
-      // console.log(`user created: ${JSON.stringify(user, null, 2)}`)
-
-      // Save the user model.
-      await user.save()
-
-      // console.log(`admin user created: ${JSON.stringify(result.body, null, 2)}`)
-      // console.log(`with password: ${context.password}`)
-
-      // Write out the system user information to a JSON file that external
-      // applications like the Task Manager and the test scripts can access.
-
-      await jsonFiles.writeJSON(context, JSON_PATH)
-      // console.log('context: ', context)
-      // console.log('JSON_PATH: ', JSON_PATH)
+      // Write the user data to the JSON file
+      await _this.jsonFiles.writeJSON(context, JSON_PATH)
 
       return context
-    } catch (err) {
-      // Handle existing system user.
-      if (err.response.status === 422) {
-        try {
-          // Delete the existing user
-          await _this.deleteExistingSystemUser()
-
-          // Call this function again.
-          return _this.createSystemUser()
-        } catch (err2) {
-          console.error(
-            'Error in admin.js/createSystemUser() while trying generate new system user.'
-          )
-          // process.end(1)
-          throw err2
-        }
-      } else {
-        console.log('Error in admin.js/createSystemUser: ')
-        // process.end(1)
-        throw err
-      }
+    } catch (error) {
+      console.log('Error in admin.js/createSystemUser()')
+      throw error
     }
   }
 
@@ -129,6 +96,7 @@ class Admin {
       })
 
       await _this.User.deleteOne({ email: 'system@system.com' })
+      return true
     } catch (err) {
       console.log('Error in admin.js/deleteExistingSystemUser()')
       throw err
@@ -152,7 +120,7 @@ class Admin {
           Accept: 'application/json'
         },
         data: {
-          email: 'system@system.com',
+          email: existingUser.email,
           password: existingUser.password
         }
       }

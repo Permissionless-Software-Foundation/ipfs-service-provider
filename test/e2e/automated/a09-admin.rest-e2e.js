@@ -62,6 +62,7 @@ describe('Admin', () => {
     describe('createSystemUser()', () => {
       it('should create admin', async () => {
         try {
+          await uut.deleteExistingSystemUser()
           const result = await uut.createSystemUser()
 
           assert.property(result, 'email')
@@ -72,44 +73,58 @@ describe('Admin', () => {
           assert(false, 'Unexpected result')
         }
       })
-
-      it('should handle axios error', async () => {
+      it('should update admin password', async () => {
         try {
-          const error1 = new Error('test error')
-          error1.response = {
-            status: 422
-          }
-          const error2 = new Error('test error')
-          error1.response = {
-            status: 500
-          }
-          // The loginAdmin() function in some use cases is recursive
-          // after handling the 422 error, it gets called again
-          sandbox
-            .stub(uut.axios, 'request')
-            .onFirstCall()
-            .throws(error1)
-            .onSecondCall()
-            .throws(error2)
+          uut.config.adminPassword = 'newpassword'
 
-          await uut.createSystemUser()
+          const fakeUser = {
+            password: 'oldpassword',
+            save: () => { return 'token' },
+            generateToken: () => { return 'token' }
+          }
+
+          sandbox.stub(uut.User, 'findOne').resolves(fakeUser)
+          const result = await uut.createSystemUser()
+
+          assert.property(result, 'email')
+          assert.property(result, 'password')
+          assert.property(result, 'id')
+          assert.property(result, 'token')
+
+          assert.equal(fakeUser.password, 'newpassword', 'password should be updated')
+        } catch (err) {
+          console.log(err)
           assert(false, 'Unexpected result')
+        }
+      })
+
+      it('should handle error', async () => {
+        try {
+          sandbox.stub(uut.User, 'findOne').throws(new Error('test error'))
+          await uut.createSystemUser()
+          assert.fail('Unexpected result')
         } catch (err) {
           assert.include(err.message, 'test error')
         }
       })
+    })
 
-      it('should handle errors when remove user', async () => {
+    describe('deleteExistingSystemUser()', () => {
+      it('should delete admin', async () => {
         try {
-          const error1 = new Error('test error')
-          error1.response = {
-            status: 422
-          }
-          sandbox.stub(uut.axios, 'request').throws(error1)
-          sandbox.stub(uut.User, 'deleteOne').throws(new Error('test error'))
-
-          await uut.createSystemUser()
+          sandbox.stub(uut.User, 'deleteOne').resolves(true)
+          const result = await uut.deleteExistingSystemUser()
+          assert.isTrue(result)
+        } catch (err) {
           assert(false, 'Unexpected result')
+        }
+      })
+
+      it('should handle error when deleting admin', async () => {
+        try {
+          sandbox.stub(uut.User, 'deleteOne').throws(new Error('test error'))
+          await uut.deleteExistingSystemUser()
+          assert.fail('Unexpected result')
         } catch (err) {
           assert.include(err.message, 'test error')
         }
