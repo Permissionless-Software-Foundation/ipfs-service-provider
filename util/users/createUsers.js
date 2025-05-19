@@ -1,8 +1,9 @@
 import mongoose from 'mongoose'
 import config from '../../config/index.js'
+import User from '../../src/adapters/localdb/models/users.js'
 
-const EMAIL = 'test@test.com'
-const PASSWORD = 'pass'
+const EMAIL = process.env.EMAIL || 'test@test3.com'
+const PASSWORD = process.env.PASSWORD || 'pass'
 
 async function addUser () {
   // Connect to the Mongo Database.
@@ -12,8 +13,6 @@ async function addUser () {
     config.database,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
-
-  const User = require('../../src/models/users')
 
   const userData = {
     email: EMAIL,
