@@ -13,7 +13,7 @@ import axios from 'axios'
 
 // Local support libraries
 import config from '../../../config/index.js'
-import Server from '../../../bin/server.js'
+// import Server from '../../../bin/server.js'
 import testUtils from '../../utils/test-utils.js'
 import AdminLib from '../../../src/adapters/admin.js'
 const adminLib = new AdminLib()
@@ -26,10 +26,12 @@ const LOCALHOST = `http://localhost:${config.port}`
 if (!config.noMongo) {
   describe('Auth', () => {
     before(async () => {
-      const app = new Server()
+      // const app = new Server()
 
       // This should be the first instruction. It starts the REST API server.
-      await app.startServer()
+      // await app.startServer()
+
+      // TODO:
 
       // Stop the IPFS node for the rest of the e2e tests.
       // await app.controllers.adapters.ipfs.stop()

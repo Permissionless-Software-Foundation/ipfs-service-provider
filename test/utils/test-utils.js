@@ -47,7 +47,7 @@ async function deleteAllUsers () {
       await thisUser.remove()
     }
   } catch (err) {
-    console.error('Error in test-utils.js/deleteAllUsers()')
+    console.error('Error in test-utils.js/deleteAllUsers(): ', err)
   }
 }
 
