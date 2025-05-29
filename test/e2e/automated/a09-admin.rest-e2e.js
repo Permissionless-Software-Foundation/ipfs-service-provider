@@ -84,6 +84,7 @@ describe('Admin', () => {
           }
 
           sandbox.stub(uut.User, 'findOne').resolves(fakeUser)
+          sandbox.stub(uut.jsonFiles, 'writeJSON').resolves(true)
           const result = await uut.createSystemUser()
 
           assert.property(result, 'email')
