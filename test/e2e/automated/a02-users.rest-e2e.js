@@ -166,64 +166,6 @@ if (!config.noMongo) {
         assert.property(result.data, 'token', 'Token property exists.')
         assert.equal(result.data.user.type, 'user')
       })
-      it('should reject signup when DISABLE_NEW_ACCOUNTS is true', async () => {
-        try {
-          process.env.DISABLE_NEW_ACCOUNTS = true
-          const options = {
-            method: 'POST',
-            url: `${LOCALHOST}/users`,
-            data: {
-              email: 'test2@test.com',
-              password: 'supersecretpassword',
-              name: 'test3'
-            }
-          }
-
-          await axios(options)
-
-          assert(false, 'Unexpected result')
-        } catch (err) {
-          console.log(err)
-          assert(err.response.status === 401, 'Error code 401 expected.')
-        }
-      })
-      it('admin can create a user when DISABLE_NEW_ACCOUNTS is true', async () => {
-        try {
-          process.env.DISABLE_NEW_ACCOUNTS = true
-          const options = {
-            method: 'post',
-            url: `${LOCALHOST}/users`,
-            headers: {
-              Authorization: `Bearer ${context.adminJWT}`
-            },
-            data: {
-              user: {
-                email: 'fromAdmin@test.com',
-                password: 'supersecretpassword',
-                name: 'test3'
-              }
-            }
-          }
-          const result = await axios(options)
-
-          context.user = result.data.user
-          context.token = result.data.token
-
-          assert(result.status === 200, 'Status Code 200 expected.')
-          assert(
-            result.data.user.email === 'fromAdmin@test.com',
-            'Email of test expected'
-          )
-          assert(
-            result.data.user.password === undefined,
-            'Password expected to be omited'
-          )
-          assert.property(result.data, 'token', 'Token property exists.')
-          assert.equal(result.data.user.type, 'user')
-        } catch (error) {
-          assert.fail('Unexpected code path')
-        }
-      })
     })
 
     describe('GET /users', () => {

@@ -79,4 +79,32 @@ describe('#Users-REST-Router', () => {
       }
     })
   })
+
+  describe('#createUser', () => {
+    it('should ignore admin validator when DISABLE_NEW_ACCOUNTS is not defined', async () => {
+      // Stub functions
+      const validationSpy = sandbox.stub(uut.validators, 'ensureAdmin').resolves(true)
+      sandbox.stub(uut.userRESTController, 'createUser').resolves(true)
+
+      // Call function
+      await uut.createUser()
+
+      // Assertions
+      assert.isTrue(validationSpy.notCalled, 'Admin validator should not be called')
+    })
+    it('should ensure admin when DISABLE_NEW_ACCOUNTS is defined', async () => {
+      // Set environment variable
+      process.env.DISABLE_NEW_ACCOUNTS = true
+
+      // Stub functions
+      const validationSpy = sandbox.stub(uut.validators, 'ensureAdmin').resolves(true)
+      sandbox.stub(uut.userRESTController, 'createUser').resolves(true)
+
+      // Call function
+      await uut.createUser()
+
+      // Assertions
+      assert.isTrue(validationSpy.calledOnce, 'Admin validator should be called')
+    })
+  })
 })

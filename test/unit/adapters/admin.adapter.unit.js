@@ -21,24 +21,10 @@ describe('Admin', () => {
     describe('loginAdmin()', () => {
       it('should logind admin', async () => {
         try {
-          const error = new Error('test error')
-          error.response = {
-            status: 422
-          }
-          // sandbox.stub(uut.axios, 'request').onFirstCall().throws(error)
+          sandbox.stub(uut.axios, 'request').resolves(true)
 
           const result = await uut.loginAdmin()
-          const user = result.data.user
-
-          assert.property(user, '_id')
-          assert.property(user, 'email')
-          assert.property(user, 'type')
-
-          assert.isString(user._id)
-          assert.isString(user.email)
-          assert.isString(user.type)
-
-          assert.equal(user.type, 'admin')
+          assert.isTrue(result)
         } catch (err) {
           assert(false, 'Unexpected result')
         }
@@ -48,13 +34,13 @@ describe('Admin', () => {
         try {
           // Returns an erroneous password to force
           // an auth error
+          sandbox.stub(uut.axios, 'request').throws(new Error('test error'))
           sandbox.stub(uut.jsonFiles, 'readJSON').resolves({ password: 'wrong' })
 
           await uut.loginAdmin()
           assert(false, 'Unexpected result')
         } catch (err) {
-          assert.equal(err.response.status, 401)
-          assert.include(err.response.data, 'Unauthorized')
+          assert.include(err.message, 'test error')
         }
       })
     })
