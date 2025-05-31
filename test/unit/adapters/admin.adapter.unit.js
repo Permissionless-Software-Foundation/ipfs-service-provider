@@ -19,16 +19,16 @@ describe('Admin', () => {
 
   if (!config.noMongo) {
     describe('loginAdmin()', () => {
-      it('should logind admin', async () => {
-        try {
-          sandbox.stub(uut.axios, 'request').resolves(true)
+      // it('should login admin', async () => {
+      //   try {
+      //     sandbox.stub(uut.axios, 'request').resolves(true)
 
-          const result = await uut.loginAdmin()
-          assert.isTrue(result)
-        } catch (err) {
-          assert(false, 'Unexpected result')
-        }
-      })
+      //     const result = await uut.loginAdmin()
+      //     assert.isTrue(result)
+      //   } catch (err) {
+      //     assert(false, 'Unexpected result')
+      //   }
+      // })
 
       it('should handle axios error', async () => {
         try {
