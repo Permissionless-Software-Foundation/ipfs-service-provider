@@ -8,7 +8,6 @@ import axios from 'axios'
 
 // Local libraries
 import config from '../../config/index.js'
-import User from '../../src/adapters/localdb/models/users.js'
 import JsonFiles from '../../src/adapters/json-files.js'
 
 // Hack to get __dirname back.
@@ -30,24 +29,6 @@ async function cleanDb () {
 
       await collection.deleteMany()
     }
-  }
-}
-
-// Delete all users in the database. This ensures there is no previous state
-// to confuse tests.
-async function deleteAllUsers () {
-  try {
-    // Get all the users in the DB.
-    const users = await User.find({}, '-password')
-    // console.log(`users: ${JSON.stringify(users, null, 2)}`)
-
-    // Delete each user.
-    for (let i = 0; i < users.length; i++) {
-      const thisUser = users[i]
-      await thisUser.remove()
-    }
-  } catch (err) {
-    console.error('Error in test-utils.js/deleteAllUsers()')
   }
 }
 
@@ -170,12 +151,56 @@ async function getAdminJWT () {
     throw err
   }
 }
+// Fetches all users from the database.
+async function getAllUsers () {
+  try {
+    const adminJWT = await getAdminJWT()
+    const options = {
+      method: 'GET',
+      url: `${LOCALHOST}/users`,
+      headers: {
+        Authorization: `Bearer ${adminJWT}`
+      }
+    }
+    const result = await axios(options)
+    return result.data.users
+  } catch (err) {
+    console.error('Error in test/utils.js/getAllUsers()', err)
+    throw err
+  }
+}
 
+// Deletes all users from the database.
+async function deleteAllUsers () {
+  try {
+    const allUsers = await getAllUsers()
+    const adminJWT = await getAdminJWT()
+    for (let i = 0; i < allUsers.length; i++) {
+      const user = allUsers[i]
+      // Skip the admin user.
+      if (user.type === 'admin') {
+        continue
+      }
+      const options = {
+        method: 'DELETE',
+        url: `${LOCALHOST}/users/${user._id}`,
+        headers: {
+          Authorization: `Bearer ${adminJWT}`
+        }
+      }
+      await axios(options)
+    }
+  } catch (err) {
+    console.error('Error in test/utils.js/deleteAllUsers()', err)
+    throw err
+  }
+}
 export default {
   cleanDb,
   createUser,
   loginTestUser,
   loginAdminUser,
   getAdminJWT,
-  deleteAllUsers
+  deleteAllUsers,
+  getAllUsers
 }

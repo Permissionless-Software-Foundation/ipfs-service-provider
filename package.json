@@ -6,10 +6,11 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "test": "npm run test:all",
+    "test": "npm run test:unit",
     "test:all": "export SVC_ENV=test && c8 --reporter=text mocha --exit --timeout 15000 --recursive test/unit test/e2e/automated/",
     "test:unit": "export SVC_ENV=test && c8 --reporter=text mocha --exit --timeout 15000 --recursive test/unit/",
     "test:e2e:auto": "export SVC_ENV=test && mocha --exit --timeout 15000 test/e2e/automated/",
+    "start:e2e:server": "export SVC_ENV=test && node index.js",
     "test:temp": "export SVC_ENV=test && mocha --exit --timeout 15000 -g '#rate-limit' test/unit/json-rpc/",
     "lint": "standard --env mocha --fix",
     "docs": "./node_modules/.bin/apidoc -i src/ -o docs",
