@@ -3,6 +3,10 @@
   for tracking the usage of REST API and JSON RPC calls. This library is used
   by admins to keep an eye on how many API calls were made in a 24-hour and
   1-hour time period.
+
+  Usage stats are held in memory. But they are periodically backed up to the
+  Mongo database. On startup, the usage stats are loaded from the database.
+  This allows the usage stats to be persisted across restarts.
 */
 
 // This global variable is used to share data between the REST middleware and
@@ -24,6 +28,9 @@ class UsageUseCases {
     this.getRestSummary = this.getRestSummary.bind(this)
     this.getTopIps = this.getTopIps.bind(this)
     this.getTopEndpoints = this.getTopEndpoints.bind(this)
+    this.clearUsage = this.clearUsage.bind(this)
+    this.saveUsage = this.saveUsage.bind(this)
+    this.loadUsage = this.loadUsage.bind(this)
 
     // State
   }
@@ -105,6 +112,58 @@ class UsageUseCases {
       return result.slice(0, 20)
     } catch (err) {
       console.error('Error in usage-use-cases.js/getTopEndpoints()')
+      throw err
+    }
+  }
+
+  // Clear the usage database data
+  async clearUsage () {
+    try {
+      await this.adapters.Usage.deleteMany({})
+
+      // Debugging: verify the database is empty
+      // Delete this code after debugging
+      const usage = await this.adapters.Usage.find({})
+      console.log('usage: ', usage)
+    } catch (err) {
+      console.error('Error in usage-use-cases.js/clearUsage()')
+      throw err
+    }
+  }
+
+  // Save the usage data to the database
+  async saveUsage (inObj = {}) {
+    try {
+      for (let i = 0; i < restCalls.length; i++) {
+        const thisRestCall = restCalls[i]
+
+        // Debugging: delete this code after debugging
+        if (i === 5) {
+          console.log('saveUsage() thisRestCall: ', thisRestCall)
+        }
+
+        const usage = new this.UsageModel(thisRestCall)
+        await usage.save()
+      }
+    } catch (err) {
+      console.error('Error in usage-use-cases.js/saveUsage()')
+      throw err
+    }
+  }
+
+  // Load usage data from the database
+  async loadUsage () {
+    try {
+      const usage = await this.adapters.Usage.find({})
+      // console.log('usage: ', usage)
+
+      if (usage[5]) {
+        console.log('loadUsage() usage[5]: ', usage[5])
+      }
+
+      restCalls = usage
+    } catch (err) {
+      console.error('Error in usage-use-cases.js/loadUsage()')
       throw err
     }
   }
