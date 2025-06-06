@@ -23,58 +23,76 @@ class TimerControllers {
 
     this.debugLevel = localConfig.debugLevel
 
+    // Constants
+    this.cleanUsageInterval = 60000 * 60 // 1 hour
+    this.backupUsageInterval = 60000 * 1 // 1 minute
+
     // Encapsulate dependencies
     this.config = config
 
     // Bind 'this' object to all subfunctions.
-    this.exampleTimerFunc = this.exampleTimerFunc.bind(this)
     this.cleanUsage = this.cleanUsage.bind(this)
-
-    // this.startTimers()
+    this.backupUsage = this.backupUsage.bind(this)
   }
 
   // Start all the time-based controllers.
   startTimers () {
     // Any new timer control functions can be added here. They will be started
     // when the server starts.
-    this.optimizeWalletHandle = setInterval(this.exampleTimerFunc, 60000 * 60)
-    this.cleanUsageHandle = setInterval(this.cleanUsage, 60000 * 60) // 1 hour
+    this.cleanUsageHandle = setInterval(this.cleanUsage, this.cleanUsageInterval)
+    this.backupUsageHandle = setInterval(this.backupUsage, this.backupUsageInterval)
 
     return true
   }
 
   stopTimers () {
-    clearInterval(this.optimizeWalletHandle)
     clearInterval(this.cleanUsageHandle)
+    clearInterval(this.backupUsageHandle)
   }
 
-  // Replace this example function with your own timer handler.
-  exampleTimerFunc (negativeTest) {
+  // Clean the usage state so that stats reflect the last 24 hours.
+  cleanUsage () {
     try {
-      console.log('Example timer controller executed.')
+      clearInterval(this.cleanUsageHandle)
 
-      if (negativeTest) throw new Error('test error')
+      const now = new Date()
+      console.log(`cleanUsage() Timer Controller executing at ${now.toLocaleString()}`)
+
+      this.useCases.usage.cleanUsage()
+
+      this.cleanUsageHandle = setInterval(this.cleanUsage, this.cleanUsageInterval)
 
       return true
     } catch (err) {
-      console.error('Error in exampleTimerFunc(): ', err)
+      console.error('Error in time-controller.js/cleanUsage(): ', err)
+
+      this.cleanUsageHandle = setInterval(this.cleanUsage, this.cleanUsageInterval)
 
       // Note: Do not throw an error. This is a top-level function.
       return false
     }
   }
 
-  // Clean the usage state so that stats reflect the last 24 hours.
-  cleanUsage () {
+  // Backup the usage stats to the database
+  async backupUsage () {
     try {
-      const now = new Date()
-      console.log(`cleanUsage() Timer Controller executing at ${now.toLocaleString()}`)
+      clearInterval(this.backupUsageHandle)
 
-      this.useCases.usage.cleanUsage()
+      console.log('backupUsage() Timer Controller executing at ', new Date().toLocaleString())
+
+      // Clear the database of old usage data.
+      await this.useCases.usage.clearUsage()
+
+      // Save the current usage snapshot to the database.
+      await this.useCases.usage.saveUsage()
+
+      this.backupUsageHandle = setInterval(this.backupUsage, this.backupUsageInterval)
 
       return true
     } catch (err) {
-      console.error('Error in time-controller.js/cleanUsage(): ', err)
+      console.error('Error in time-controller.js/backupUsage(): ', err)
+
+      this.backupUsageHandle = setInterval(this.backupUsage, this.backupUsageInterval)
 
       // Note: Do not throw an error. This is a top-level function.
       return false

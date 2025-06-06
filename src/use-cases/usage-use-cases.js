@@ -23,6 +23,9 @@ class UsageUseCases {
       )
     }
 
+    // Encapsulate dependencies
+    this.UsageModel = this.adapters.localdb.Usage
+
     // Bind 'this' object to all subfunctions
     this.cleanUsage = this.cleanUsage.bind(this)
     this.getRestSummary = this.getRestSummary.bind(this)
@@ -119,12 +122,12 @@ class UsageUseCases {
   // Clear the usage database data
   async clearUsage () {
     try {
-      await this.adapters.Usage.deleteMany({})
+      await this.UsageModel.deleteMany({})
 
       // Debugging: verify the database is empty
       // Delete this code after debugging
-      const usage = await this.adapters.Usage.find({})
-      console.log('usage: ', usage)
+      const usage = await this.UsageModel.find({})
+      console.log('clearUsage() usage: ', usage)
     } catch (err) {
       console.error('Error in usage-use-cases.js/clearUsage()')
       throw err
@@ -142,7 +145,14 @@ class UsageUseCases {
           console.log('saveUsage() thisRestCall: ', thisRestCall)
         }
 
-        const usage = new this.UsageModel(thisRestCall)
+        const usageData = {
+          ip: thisRestCall.ip,
+          url: thisRestCall.url,
+          method: thisRestCall.method,
+          timestamp: thisRestCall.timestamp
+        }
+
+        const usage = new this.UsageModel(usageData)
         await usage.save()
       }
     } catch (err) {
@@ -154,7 +164,7 @@ class UsageUseCases {
   // Load usage data from the database
   async loadUsage () {
     try {
-      const usage = await this.adapters.Usage.find({})
+      const usage = await this.UsageModel.find({})
       // console.log('usage: ', usage)
 
       if (usage[5]) {
@@ -163,8 +173,8 @@ class UsageUseCases {
 
       restCalls = usage
     } catch (err) {
-      console.error('Error in usage-use-cases.js/loadUsage()')
-      throw err
+      console.error('Error in usage-use-cases.js/loadUsage(): ', err)
+      // throw err
     }
   }
 }
