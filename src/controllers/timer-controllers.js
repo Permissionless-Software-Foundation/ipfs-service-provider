@@ -25,7 +25,7 @@ class TimerControllers {
 
     // Constants
     this.cleanUsageInterval = 60000 * 60 // 1 hour
-    this.backupUsageInterval = 60000 * 1 // 1 minute
+    this.backupUsageInterval = 60000 * 10 // 10 minutes
 
     // Encapsulate dependencies
     this.config = config
