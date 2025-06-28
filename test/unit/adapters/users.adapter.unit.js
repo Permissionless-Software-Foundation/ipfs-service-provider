@@ -54,6 +54,13 @@ describe('#User-Adapter', () => {
 
       assert.notEqual(testuser.password, 'password')
     })
+    it('should ignore password encrption if password property is not provided', async () => {
+      const lastPassword = testuser.password
+      await testuser.save()
+      // console.log('testuser: ', testuser)
+
+      assert.equal(testuser.password, lastPassword)
+    })
   })
 
   describe('#validatePassword', () => {

@@ -34,10 +34,25 @@ describe('#passport', () => {
 
       passportCallback(id, 'password', done)
     })
+    it('should handle not found user', () => {
+      // Mock Users model.
+      sandbox.stub(User, 'findOne').resolves(null)
+
+      passportCallback(id, 'password', done)
+    })
 
     it('should return if password is validated', () => {
       // Mock Users model.
       sandbox.stub(User, 'findOne').resolves(new adaptersMock.localdb.Users())
+
+      passportCallback(id, 'password', done)
+    })
+    it('should handle error on password validation', () => {
+      // Mock Users model.
+      const userMock = {
+        validatePassword: () => false
+      }
+      sandbox.stub(User, 'findOne').resolves(userMock)
 
       passportCallback(id, 'password', done)
     })

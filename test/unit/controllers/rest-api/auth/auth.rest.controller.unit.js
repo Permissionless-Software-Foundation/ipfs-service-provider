@@ -79,10 +79,21 @@ describe('#Auth-REST-Router', () => {
       await uut.authUser(ctx)
     })
 
-    it('should catch and throw an error', async () => {
+    it('should catch and throw  passport error', async () => {
       try {
         // Force an error
         sandbox.stub(uut.passport, 'authUser').rejects('test error')
+
+        await uut.authUser(ctx)
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'Unauthorized')
+      }
+    })
+    it('should handle error if user is not found!', async () => {
+      try {
+        // Force an error
+        sandbox.stub(uut.passport, 'authUser').resolves(null)
 
         await uut.authUser(ctx)
       } catch (err) {
