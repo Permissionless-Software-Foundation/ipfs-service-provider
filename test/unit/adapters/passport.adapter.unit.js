@@ -41,5 +41,17 @@ describe('#passport.js', () => {
         assert.include(err.message, 'cant auth user')
       }
     })
+    it('should authenticate user', async () => {
+      const ctx = {}
+      const errMock = null
+      const userMock = {
+        _id: '123',
+        email: 'test@test.com'
+      }
+      sandbox.stub(uut.passport, 'authenticate').yields(errMock, userMock)
+      const user = await uut.authUser(ctx)
+      assert.equal(user._id, userMock._id)
+      assert.equal(user.email, userMock.email)
+    })
   })
 })

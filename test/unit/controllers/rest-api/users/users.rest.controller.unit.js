@@ -153,6 +153,20 @@ describe('#Users-REST-Controller', () => {
       // Assert that expected properties exist in the returned data.
       assert.property(ctx.response.body, 'user')
     })
+    it('should run next function if it exists', async () => {
+      // Mock dependencies
+      const nextSpy = sandbox.spy()
+      sandbox.stub(uut.useCases.user, 'getUser').resolves({ _id: '123' })
+
+      await uut.getUser(ctx, nextSpy)
+
+      // Assert the expected HTTP response
+      assert.equal(ctx.status, 200)
+
+      // Assert that expected properties exist in the returned data.
+      assert.property(ctx.response.body, 'user')
+      assert.isTrue(nextSpy.calledOnce)
+    })
 
     it('should return other error status passed by biz logic', async () => {
       try {

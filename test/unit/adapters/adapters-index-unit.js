@@ -37,6 +37,21 @@ describe('#adapters', () => {
 
       assert.equal(result, true)
     })
+    it('should not start ipfs on test enviroment', async () => {
+      // Mock dependencies
+      uut.config.getJwtAtStartup = true
+      uut.config.useIpfs = true
+      uut.config.env = 'test'
+
+      sandbox.stub(uut.fullStackJwt, 'getJWT').resolves()
+      sandbox.stub(uut.fullStackJwt, 'instanceBchjs').resolves()
+      const ipfsSpy = sandbox.stub(uut.ipfs, 'start').resolves(null)
+
+      const result = await uut.start()
+
+      assert.isTrue(ipfsSpy.notCalled)
+      assert.equal(result, true)
+    })
 
     it('should catch and throw an error', async () => {
       try {

@@ -128,6 +128,7 @@ class UsageUseCases {
       // Delete this code after debugging
       const usage = await this.UsageModel.find({})
       console.log('clearUsage() usage: ', usage)
+      return true
     } catch (err) {
       console.error('Error in usage-use-cases.js/clearUsage()')
       throw err
@@ -141,9 +142,9 @@ class UsageUseCases {
         const thisRestCall = restCalls[i]
 
         // Debugging: delete this code after debugging
-        if (i === 5) {
-          console.log('saveUsage() thisRestCall: ', thisRestCall)
-        }
+        // if (i === 5) {
+        //   console.log('saveUsage() thisRestCall: ', thisRestCall)
+        // }
 
         const usageData = {
           ip: thisRestCall.ip,
@@ -155,6 +156,7 @@ class UsageUseCases {
         const usage = new this.UsageModel(usageData)
         await usage.save()
       }
+      return true
     } catch (err) {
       console.error('Error in usage-use-cases.js/saveUsage()')
       throw err
@@ -167,13 +169,16 @@ class UsageUseCases {
       const usage = await this.UsageModel.find({})
       // console.log('usage: ', usage)
 
+      // Debugging: delete this code after debugging
       if (usage[5]) {
         console.log('loadUsage() usage[5]: ', usage[5])
       }
 
       restCalls = usage
+      return usage
     } catch (err) {
       console.error('Error in usage-use-cases.js/loadUsage(): ', err)
+      return false
       // throw err
     }
   }

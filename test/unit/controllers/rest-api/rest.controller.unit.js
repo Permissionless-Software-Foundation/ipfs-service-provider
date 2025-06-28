@@ -20,7 +20,7 @@ describe('#RESTControllers', () => {
   let sandbox
   // let ctx
 
-  before(async () => {})
+  before(async () => { })
 
   beforeEach(() => {
     const useCases = new UseCasesMock()
@@ -62,6 +62,21 @@ describe('#RESTControllers', () => {
           'Instance of Use Cases library required when instantiating REST Controller libraries.'
         )
       }
+    })
+  })
+
+  describe('#attachRESTControllers', () => {
+    it('should attach controllers without mongo service', () => {
+      uut.config.noMongo = true
+
+      const app = { use: () => {} }
+      uut.attachRESTControllers(app)
+    })
+    it('should attach controllers with mongo service', () => {
+      uut.config.noMongo = false
+
+      const app = { use: () => {} }
+      uut.attachRESTControllers(app)
     })
   })
 })
