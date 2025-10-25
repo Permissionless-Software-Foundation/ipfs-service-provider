@@ -12,7 +12,7 @@ async function getUsers () {
   )
 
   // Find the user by email.
-  const user = await User.find({
+  const user = await User.findOne({
     email: 'test@test.com'
   }, '-password')
 
