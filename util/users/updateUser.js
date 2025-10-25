@@ -11,8 +11,19 @@ async function getUsers () {
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
 
-  const users = await User.find({}, '-password')
-  console.log(`users: ${JSON.stringify(users, null, 2)}`)
+  // Find the user by email.
+  const user = await User.find({
+    email: 'test@test.com'
+  }, '-password')
+
+  // Update the users password
+  // user.password = 'newpassword'
+
+  // Change the user to an admin
+  // user.type = 'admin'
+
+  // Save the changes to the database.
+  await user.save()
 
   mongoose.connection.close()
 }
