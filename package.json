@@ -39,7 +39,7 @@
     "@libp2p/tcp": "10.1.2",
     "@libp2p/webrtc": "5.2.2",
     "@libp2p/websockets": "9.2.2",
-    "@multiformats/multiaddr": "12.3.5",
+    "@multiformats/multiaddr": "12.5.1",
     "axios": "0.27.2",
     "bcryptjs": "2.4.3",
     "blockstore-fs": "2.0.2",
@@ -102,5 +102,17 @@
     "ignore": [
       "/test/unit/mocks/**/*.js"
     ]
+  },
+  "overrides": {
+    "@multiformats/multiaddr-to-uri": "10.1.2",
+    "@multiformats/multiaddr-matcher": "1.6.0",
+    "@multiformats/multiaddr": "12.5.1",
+    "helia": {
+      "libp2p": "2.7.2",
+      "@libp2p/upnp-nat": "3.0.0"
+    },
+    "libp2p": {
+      "@multiformats/multiaddr": "12.5.1"
+    }
   }
 }
