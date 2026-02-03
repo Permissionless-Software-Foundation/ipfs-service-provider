@@ -14,13 +14,14 @@ describe('#adapters', () => {
   let uut, sandbox
 
   beforeEach(() => {
-    uut = new Adapters()
-
     sandbox = sinon.createSandbox()
+    uut = new Adapters()
   })
 
   afterEach(() => {
-    sandbox.restore()
+    if (sandbox) {
+      sandbox.restore()
+    }
   })
 
   describe('#start', () => {

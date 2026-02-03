@@ -10,15 +10,23 @@ describe('#config', () => {
   before(() => {
     // Backup the current environment setting.
     currentEnv = process.env.SVC_ENV
+    // Clear SVC_ENV for the first test to ensure default behavior
+    delete process.env.SVC_ENV
   })
 
   after(() => {
     // Restore the environment setting before starting these tests.
-    process.env.SVC_ENV = currentEnv
+    if (currentEnv) {
+      process.env.SVC_ENV = currentEnv
+    } else {
+      delete process.env.SVC_ENV
+    }
   })
 
   it('Should return development environment config by default', async () => {
-    const importedConfig = await import('../../../config/index.js')
+    // Ensure SVC_ENV is not set for this test
+    delete process.env.SVC_ENV
+    const importedConfig = await import('../../../config/index.js?foo=bar0')
     const config = importedConfig.default
     // console.log('config: ', config)
 
