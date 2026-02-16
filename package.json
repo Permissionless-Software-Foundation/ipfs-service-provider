@@ -28,7 +28,7 @@
     "axios": "0.27.2",
     "bcryptjs": "2.4.3",
     "glob": "7.1.6",
-    "helia-coord": "2.0.1",
+    "helia-coord": "2.0.2",
     "jsonrpc-lite": "2.2.0",
     "jsonwebtoken": "8.5.1",
     "jwt-bch-lib": "1.3.0",
