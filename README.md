@@ -4,20 +4,18 @@
 
 ## Overview
 
-This is a 'boilerplate' repository. It's intended to be forked to start new projects. Some code projects that are forks of this repository and regularly pull in changes:
-- [pay-to-write database (P2WDB)](https://p2wdb.com/)
-- [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer)
-- [ipfs-bch-wallet-service](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service)
-- [colab-coinjoin-api](https://github.com/bch-coinjoin/colab-coinjoin-api)
+This is a 'boilerplate' repository that consumes the [helia-coord](https://github.com/Permissionless-Software-Foundation/helia-coord) library to set up an IPFS node with REST API and JSON RPC endpoints, user management with [JWT tokens](https://jwt.io/), and other basic features. It's intended to be forked to start new projects.
 
+Three major [Cash Stack](https://cashstack.info) infrastructure projects have been forked from this repository:
+
+- [ipfs-file-pin-service](https://github.com/Permissionless-Software-Foundation/ipfs-file-pin-service) - Paid IPFS file pinning using the [Pin Claim protocol (PS010)](https://github.com/Permissionless-Software-Foundation/specifications/blob/master/ps010-file-pinning-protocol.md).
+- [ipfs-bch-wallet-service](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service) - A censorship-resistant, IPFS-based microservice providing wallet access to the Bitcoin Cash blockchain.
+- [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer) - A localized REST API for consuming blockchain services provided by ipfs-bch-wallet-service over IPFS.
+
+Other forks include:
+- [colab-coinjoin-api](https://github.com/bch-coinjoin/colab-coinjoin-api) - Part of the [Collaborative CoinJoin](https://ccoinjoin.com) framework for financial privacy.
 
 In addition to being forked as a boilerplate, it can also be run as a stand-alone application to create a [Circuit Relay](https://cashstack.info/docs/local-back-end/circuit-relay), which can support the [PSF](https://psfoundation.info) IPFS network. It can also be used for experimenting with [helia-coord](https://github.com/Permissionless-Software-Foundation/helia-coord) and the [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) command-line wallet.
-
-### Video Demo
-
-A video demo shows you how to quickly setup ipfs-service-provider and start interacting with its IPFS node using the [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) command-line app.
-
-- [ipfs-service-provider Demo Video](https://youtu.be/_9Xvh3aMrFg)
 
 ## Boilerplate
 
@@ -34,16 +32,10 @@ This boilerplate extends that code to provide the basic features required to be 
 - [helia-coord](https://github.com/Permissionless-Software-Foundation/helia-coord) for coordinating service providers and consumers across the IPFS network.
 - JSON RPC for creating an API between providers and consumers.
 
-If you are interested in creating your own service provider on the IPFS network, fork this repository and start building. This repository is used in serveral PSF projects:
-
-- [P2WDB](https://github.com/Permissionless-Software-Foundation/ipfs-p2wdb-service) - the [pay-to-write database](https://p2wdb.com) is a censorship-resistent, p2p database for storing data and pinning files to the IPFS network.
-- [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer) and [ipfs-bch-wallet-service](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service) creates a web3, censorship-resistent API for apps to communicate with a blockchain. This software is documented in [the Cash Stack](https://cashstack.info).
-- [colab-coinjoin-api](https://github.com/bch-coinjoin/colab-coinjoin-api) is part of the [Collaborative CoinJoin](https://ccoinjoin.com) framework to allow wallets to easily integrate CoinJoin transaction forming, to create financial privacy.
+If you are interested in creating your own service provider on the IPFS network, fork this repository and start building.
 
 ## IPFS node
 This web server spins up an embedded IPFS ([Helia](https://github.com/ipfs/helia)) node. This node can be controlled and interrogated via the REST API. [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) is a command-line app (CLI) that can easily tap into this REST API in order to interact with the embedded IPFS node.
-
-- *Video link will be added here*
 
 ## Requirements
 
@@ -115,7 +107,7 @@ There is additional developer documentation in the [dev-docs directory](./dev-do
 - [Mocha](https://mochajs.org/)
 - [apidoc](http://apidocjs.com/)
 - [ESLint](http://eslint.org/)
-- [ipfs-coord](https://www.npmjs.com/package/ipfs-coord)
+- [helia-coord](https://www.npmjs.com/package/helia-coord)
 
 ## IPFS
 
