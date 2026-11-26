@@ -74,6 +74,23 @@ npm start
 
 This app is intended to be started via a bash shell script. See the environment variables used to configure this app in the [config/env/common.js file](./config/env/common.js).
 
+#### Bootstrap peers (`BOOTSTRAP_SERVERS`)
+
+Peer discovery uses the `DEFAULT_BOOTSTRAP_PEERS` list hard-coded in
+[helia-coord](https://github.com/Permissionless-Software-Foundation/helia-coord).
+When those relays are unreachable, the node comes up with no peers and can not
+retrieve CIDs. Set `BOOTSTRAP_SERVERS` to a **comma-delimited list of multiaddrs**
+to replace that list for this deployment:
+
+```bash
+export BOOTSTRAP_SERVERS="/ip4/172.18.0.3/tcp/4101/p2p/12D3KooWDDrYph3KNxASGR5a4Bjw8thVTfK6MHiNCSz6GvygXwdR,/ip4/143.198.134.59/tcp/4101/p2p/12D3KooWHogx3RcyNiSuY6SzS8GxzTAqtDCYzy17yQ1StWaLvX9j"
+```
+
+- Unset or blank → helia-coord's defaults are used (backwards compatible).
+- Whitespace around entries is trimmed; blank entries are ignored.
+- A malformed entry throws at startup rather than failing later inside libp2p.
+- The active list is logged at startup as `Bootstrap peers:`.
+
 ## File Structure
 
 The file layout of this repository follows the file layout of [Clean Architecture](https://christroutner.github.io/trouts-blog/blog/clean-architecture). Understaning the principles laid out this article will help developers navigate the code base.
