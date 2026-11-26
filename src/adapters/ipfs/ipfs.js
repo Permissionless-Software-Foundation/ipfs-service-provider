@@ -40,11 +40,14 @@ class IpfsAdapter {
   async start () {
     try {
       // Create the helia-coord node factory with production configuration.
+      // bootstrapPeers is undefined unless BOOTSTRAP_SERVERS is set; undefined
+      // makes helia-coord fall back to its DEFAULT_BOOTSTRAP_PEERS list.
       this.heliaNode = new CreateHeliaNode({
         ipfsDir: IPFS_DIR,
         tcpPort: this.config.ipfsTcpPort,
         wsPort: this.config.ipfsWsPort,
         isCircuitRelay: this.config.isCircuitRelay,
+        bootstrapPeers: this.config.bootstrapPeers,
         getSeed: this.getSeed
       })
 
@@ -56,6 +59,10 @@ class IpfsAdapter {
 
       console.log('IPFS ID: ', this.id)
       console.log('Multiaddrs: ', this.multiaddrs)
+      console.log(
+        'Bootstrap peers: ',
+        this.config.bootstrapPeers || '(helia-coord defaults)'
+      )
 
       // Signal that this adapter is ready.
       this.isReady = true
