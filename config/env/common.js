@@ -11,6 +11,13 @@
     When unset, helia-coord's defaults are used (preserving past behavior).
     Example:
       BOOTSTRAP_SERVERS=/ip4/172.18.0.3/tcp/4101/p2p/12D3KooWDDrYph3KNxASGR5a4Bjw8thVTfK6MHiNCSz6GvygXwdR,/ip4/143.198.134.59/tcp/4101/p2p/12D3KooWHogx3RcyNiSuY6SzS8GxzTAqtDCYzy17yQ1StWaLvX9j
+  - ANNOUNCE_MULTIADDRS: comma-delimited list of multiaddrs added to this
+    node's announcement (helia-coord >= 2.1.0 reads it directly, so there is no
+    config key for it here). Use it when the public address can not be
+    auto-detected: behind a NAT, a firewall, or a proxy such as a wireguard
+    tunnel. Entries without a /p2p/ component get this node's peer ID appended.
+    Example:
+      ANNOUNCE_MULTIADDRS=/ip4/192.236.235.173/tcp/4103/p2p/12D3KooWJEGkUM5wmYt83MsDPGQPEpqwcktCiksyH9GykjPmyGXh
 */
 
 /* eslint  no-unneeded-ternary:0 */
