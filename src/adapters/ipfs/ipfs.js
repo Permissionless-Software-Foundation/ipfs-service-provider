@@ -63,6 +63,13 @@ class IpfsAdapter {
         'Bootstrap peers: ',
         this.config.bootstrapPeers || '(helia-coord defaults)'
       )
+      // ANNOUNCE_MULTIADDRS is read directly by helia-coord (>= 2.1.0), so it is
+      // not part of this app's config. Log it so operators can confirm what was
+      // inherited by the container/process.
+      console.log(
+        'Announce multiaddrs: ',
+        process.env.ANNOUNCE_MULTIADDRS || '(none: auto-detection only)'
+      )
 
       // Signal that this adapter is ready.
       this.isReady = true

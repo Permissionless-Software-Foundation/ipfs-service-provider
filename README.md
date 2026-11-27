@@ -91,6 +91,32 @@ export BOOTSTRAP_SERVERS="/ip4/172.18.0.3/tcp/4101/p2p/12D3KooWDDrYph3KNxASGR5a4
 - A malformed entry throws at startup rather than failing later inside libp2p.
 - The active list is logged at startup as `Bootstrap peers:`.
 
+#### Announced addresses (`ANNOUNCE_MULTIADDRS`)
+
+`helia-coord` publishes a list of multiaddrs for each node, and peers use that list to dial it.
+The public address is auto-detected with `public-ip`, which only works when the host can see its
+own public address. A node behind a NAT, a firewall, or a proxy such as a wireguard tunnel can not
+— `libp2p` can not see through the proxy either — so such a node announces only `p2p-circuit`
+addresses and is unreachable by direct dial.
+
+Set `ANNOUNCE_MULTIADDRS` to a **comma-delimited list of multiaddrs** the operator knows are
+reachable:
+
+```bash
+export ANNOUNCE_MULTIADDRS="/ip4/192.236.235.173/tcp/4103/p2p/12D3KooWJEGkUM5wmYt83MsDPGQPEpqwcktCiksyH9GykjPmyGXh"
+```
+
+- Read directly by `helia-coord` (`>= 2.1.0`), so there is no config key for it in this repo. It
+  only needs to be present in the environment of the process/container.
+- Entries without a `/p2p/` component get this node's peer ID appended, so
+  `/ip4/192.236.235.173/tcp/4103` works as written.
+- Unset or blank → auto-detection only (unchanged behaviour).
+- A malformed entry throws at startup.
+- The value is echoed at startup as `Announce multiaddrs:`.
+
+Note that this affects the coordination announcement only. It does not change what `libp2p`
+advertises through identify.
+
 ## File Structure
 
 The file layout of this repository follows the file layout of [Clean Architecture](https://christroutner.github.io/trouts-blog/blog/clean-architecture). Understaning the principles laid out this article will help developers navigate the code base.
